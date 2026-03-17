@@ -3,8 +3,8 @@ import { computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTheme } from "vuetify";
 import ThemeOption from "@/components/Settings/UserInterface/ThemeOption.vue";
-import RSection from "@/components/common/RSection.vue";
 import { useUISettings } from "@/composables/useUISettings";
+import { RSection } from "@/lib";
 
 const { t } = useI18n();
 const theme = useTheme();

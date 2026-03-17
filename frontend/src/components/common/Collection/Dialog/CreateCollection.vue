@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import CollectionCard from "@/components/common/Collection/Card.vue";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import { ROUTES } from "@/plugins/router";
 import collectionApi, {
   type UpdatedCollection,

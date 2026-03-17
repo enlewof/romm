@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 import { useDisplay } from "vuetify";
 import CollectionCard from "@/components/common/Collection/Card.vue";
 import DeleteCollectionDialog from "@/components/common/Collection/Dialog/DeleteCollection.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import collectionApi from "@/services/api/collection";
 import storeAuth from "@/stores/auth";
 import storeCollection from "@/stores/collections";

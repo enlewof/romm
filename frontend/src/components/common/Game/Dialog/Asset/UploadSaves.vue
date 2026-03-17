@@ -2,7 +2,7 @@
 import type { Emitter } from "mitt";
 import { inject, nextTick, ref } from "vue";
 import { useDisplay } from "vuetify";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import saveApi from "@/services/api/save";
 import type { DetailedRom } from "@/stores/roms";
 import type { Events } from "@/types/emitter";

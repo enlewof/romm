@@ -7,7 +7,7 @@ import { useDisplay } from "vuetify";
 import CollectionCard from "@/components/common/Collection/Card.vue";
 import DeleteCollectionDialog from "@/components/common/Collection/Dialog/DeleteCollection.vue";
 import DeleteSmartCollectionDialog from "@/components/common/Collection/Dialog/DeleteSmartCollection.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import type { UpdatedCollection } from "@/services/api/collection";
 import collectionApi from "@/services/api/collection";
 import storeAuth from "@/stores/auth";

@@ -4,7 +4,7 @@ import { computed, inject, onBeforeUnmount, ref } from "vue";
 import { useDisplay } from "vuetify";
 import type { SearchCoverSchema } from "@/__generated__";
 import Skeleton from "@/components/common/Game/Card/Skeleton.vue";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import sgdbApi from "@/services/api/sgdb";
 import storeGalleryView from "@/stores/galleryView";
 import type { Events } from "@/types/emitter";

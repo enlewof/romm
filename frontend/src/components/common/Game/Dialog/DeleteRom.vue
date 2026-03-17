@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 import RomListItem from "@/components/common/Game/ListItem.vue";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import { ROUTES } from "@/plugins/router";
 import configApi from "@/services/api/config";
 import romApi from "@/services/api/rom";

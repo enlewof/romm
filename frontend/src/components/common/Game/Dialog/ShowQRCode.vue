@@ -3,7 +3,7 @@ import type { Emitter } from "mitt";
 import qrcode from "qrcode";
 import { inject, nextTick, ref } from "vue";
 import { useDisplay } from "vuetify";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import type { SimpleRom } from "@/stores/roms";
 import type { Events } from "@/types/emitter";
 import { getNintendoDSFiles, getDownloadLink, isNintendoDSFile } from "@/utils";

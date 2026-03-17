@@ -3,6 +3,7 @@ import type { Emitter } from "mitt";
 import { inject, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
+import { RBtn, RCard, RIcon, RImg, RProgressCircular, RTextField } from "@/lib";
 import { refetchCSRFToken } from "@/services/api";
 import identityApi from "@/services/api/identity";
 import storeAuth from "@/stores/auth";
@@ -51,12 +52,12 @@ async function resetPassword() {
 </script>
 
 <template>
-  <v-card class="translucent py-8 px-5" width="500">
-    <v-img src="/assets/isotipo.svg" class="mx-auto mb-8" width="80" />
+  <RCard class="translucent py-8 px-5" width="500">
+    <RImg src="/assets/isotipo.svg" class="mx-auto mb-8" width="80" />
     <v-row class="text-white justify-center mt-2" no-gutters>
       <v-col cols="10">
         <v-form @submit.prevent="resetPassword">
-          <v-text-field
+          <RTextField
             v-model="newPassword"
             :label="t('login.new-password')"
             :type="visibleNewPassword ? 'text' : 'password'"
@@ -65,7 +66,7 @@ async function resetPassword() {
             variant="underlined"
             @click:append-inner="visibleNewPassword = !visibleNewPassword"
           />
-          <v-text-field
+          <RTextField
             v-model="confirmPassword"
             :label="t('login.confirm-new-password')"
             :type="visibleConfirmNewPassword ? 'text' : 'password'"
@@ -83,7 +84,7 @@ async function resetPassword() {
             class="text-red text-caption"
             >Passwords do not match</span
           >
-          <v-btn
+          <RBtn
             type="submit"
             class="bg-toplayer mt-4"
             variant="text"
@@ -91,18 +92,18 @@ async function resetPassword() {
             :disabled="newPassword !== confirmPassword"
           >
             <template #prepend>
-              <v-icon>mdi-send</v-icon>
+              <RIcon>mdi-send</RIcon>
             </template>
             {{ t("login.reset-password") }}
             <template #loader>
-              <v-progress-circular
+              <RProgressCircular
                 color="primary"
                 :width="2"
                 :size="20"
                 indeterminate
               />
             </template>
-          </v-btn>
+          </RBtn>
         </v-form>
         <div class="my-6 text-right">
           <a class="text-blue text-caption" href="/login">
@@ -111,5 +112,5 @@ async function resetPassword() {
         </div>
       </v-col>
     </v-row>
-  </v-card>
+  </RCard>
 </template>

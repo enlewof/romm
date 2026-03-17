@@ -4,7 +4,7 @@ import { computed, nextTick, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import RunningTaskItem from "@/components/Settings/Administration/RunningTaskItem.vue";
 import TaskOption from "@/components/Settings/Administration/TaskOption.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import storeTasks from "@/stores/tasks";
 import { convertCronExperssion } from "@/utils";
 

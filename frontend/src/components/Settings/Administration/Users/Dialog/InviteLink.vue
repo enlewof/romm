@@ -2,7 +2,7 @@
 import type { Emitter } from "mitt";
 import { inject, ref } from "vue";
 import { useDisplay } from "vuetify";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import userApi from "@/services/api/user";
 import type { Events } from "@/types/emitter";
 import { getRoleIcon } from "@/utils";

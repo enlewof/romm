@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { inject, ref, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import RetroAchievements from "@/components/Settings/UserProfile/RetroAchievements.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import userApi from "@/services/api/user";
 import storeAuth from "@/stores/auth";
 import storeUsers from "@/stores/users";

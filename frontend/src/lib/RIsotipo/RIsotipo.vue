@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { RAvatar } from "@/lib/RAvatar";
 
 withDefaults(defineProps<{ size?: number; avatar?: boolean }>(), {
   size: 40,
@@ -29,23 +30,23 @@ const randomLogo = ref<string>(getRandomLogo());
 </script>
 
 <template>
-  <v-avatar
+  <RAvatar
     variant="text"
     :size="size"
     :class="{ 'rounded-circle': avatar, rounded: !avatar }"
   >
     <img :src="`/assets/logos/${randomLogo}`" alt="Romm Logo" :width="size" />
-  </v-avatar>
+  </RAvatar>
 </template>
 
 <style scoped>
-.v-avatar {
+:deep(.v-avatar) {
   transition:
     filter 0.15s ease-in-out,
     border-radius 0.15s ease-in-out;
 }
-.v-avatar:hover,
-.v-avatar.active {
+:deep(.v-avatar:hover),
+:deep(.v-avatar.active) {
   filter: drop-shadow(0px 0px 2px rgba(var(--v-theme-primary)));
 }
 </style>

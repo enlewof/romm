@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useDisplay } from "vuetify";
 import type { SaveSchema } from "@/__generated__";
 import AssetCard from "@/components/common/Game/AssetCard.vue";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import type { DetailedRom } from "@/stores/roms";
 import type { Events } from "@/types/emitter";
 

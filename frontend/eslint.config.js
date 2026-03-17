@@ -1,4 +1,6 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import eslint from "@eslint/js";
+import storybook from "eslint-plugin-storybook";
 import vue from "eslint-plugin-vue";
 import vuea11y from "eslint-plugin-vuejs-accessibility";
 import globals from "globals";
@@ -55,4 +57,5 @@ export default tseslint.config(
       "vue/attribute-hyphenation": ["error", "always"],
     },
   },
+  storybook.configs["flat/recommended"],
 );

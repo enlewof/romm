@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { RCard } from "@/lib/RCard";
+import { RCardText } from "@/lib/RCardText";
+import { RDivider } from "@/lib/RDivider";
+import { RIcon } from "@/lib/RIcon";
+import { RToolbar } from "@/lib/RToolbar";
+
 withDefaults(
   defineProps<{
     title: string;
@@ -18,23 +24,22 @@ withDefaults(
 </script>
 
 <template>
-  <v-card class="bg-background" elevation="0">
-    <v-toolbar class="bg-toplayer px-1" density="compact">
+  <RCard class="bg-background" :elevation="0">
+    <RToolbar class="bg-toplayer px-1" density="compact">
       <v-toolbar-title class="text-button">
-        <v-icon :color="iconColor" class="mr-2">
+        <RIcon :color="iconColor" class="mr-2">
           {{ icon }}
-        </v-icon>
+        </RIcon>
         {{ title }}
         <slot name="toolbar-title-append" />
       </v-toolbar-title>
       <slot name="toolbar-append" />
-    </v-toolbar>
+    </RToolbar>
 
-    <v-divider v-if="titleDivider" />
+    <RDivider v-if="titleDivider" />
 
-    <!-- Check style card-text -->
-    <v-card-text :class="['pa-0', bgColor]">
+    <RCardText :class="['pa-0', bgColor]">
       <slot name="content" />
-    </v-card-text>
-  </v-card>
+    </RCardText>
+  </RCard>
 </template>

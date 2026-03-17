@@ -3,6 +3,15 @@ import type { Emitter } from "mitt";
 import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import {
+  RBtn,
+  RCard,
+  RDivider,
+  RIcon,
+  RImg,
+  RProgressCircular,
+  RTextField,
+} from "@/lib";
 import { refetchCSRFToken } from "@/services/api";
 import identityApi from "@/services/api/identity";
 import storeAuth from "@/stores/auth";
@@ -104,8 +113,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-card class="translucent py-8 px-5" width="500">
-    <v-img src="/assets/isotipo.svg" class="mx-auto mb-8" width="80" />
+  <RCard class="translucent py-8 px-5" width="500">
+    <RImg src="/assets/isotipo.svg" class="mx-auto mb-8" width="80" />
     <v-expand-transition>
       <v-row
         v-if="!forgotMode"
@@ -118,7 +127,7 @@ onMounted(async () => {
             v-model="validForm"
             @submit.prevent="login"
           >
-            <v-text-field
+            <RTextField
               v-model="username"
               :label="t('login.username')"
               type="text"
@@ -128,7 +137,7 @@ onMounted(async () => {
               prepend-inner-icon="mdi-account"
               variant="underlined"
             />
-            <v-text-field
+            <RTextField
               v-model="password"
               :label="t('login.password')"
               :type="visiblePassword ? 'text' : 'password'"
@@ -140,7 +149,7 @@ onMounted(async () => {
               variant="underlined"
               @click:append-inner="visiblePassword = !visiblePassword"
             />
-            <v-btn
+            <RBtn
               type="submit"
               class="bg-toplayer mt-4"
               variant="text"
@@ -149,26 +158,26 @@ onMounted(async () => {
               :disabled="loggingIn || loggingInOIDC || !validForm"
             >
               <template #prepend>
-                <v-icon>mdi-login</v-icon>
+                <RIcon>mdi-login</RIcon>
               </template>
               {{ t("login.login") }}
               <template #loader>
-                <v-progress-circular
+                <RProgressCircular
                   color="primary"
                   :width="2"
                   :size="20"
                   indeterminate
                 />
               </template>
-            </v-btn>
+            </RBtn>
           </v-form>
           <template v-if="oidcEnabled">
-            <v-divider v-if="!loginDisabled" class="my-4">
+            <RDivider v-if="!loginDisabled" class="my-4">
               <template #default>
                 <span class="px-1">{{ t("login.or") }}</span>
               </template>
-            </v-divider>
-            <v-btn
+            </RDivider>
+            <RBtn
               block
               type="submit"
               class="bg-toplayer"
@@ -178,17 +187,17 @@ onMounted(async () => {
               @click="loginOIDC"
             >
               <template v-if="oidcProvider" #prepend>
-                <v-icon size="20">
-                  <v-img
+                <RIcon :size="20">
+                  <RImg
                     :src="`/assets/dashboard-icons/${oidcProvider
                       .toLowerCase()
                       .replace(/ /g, '-')}.png`"
                   >
                     <template #error>
-                      <v-icon size="20"> mdi-key </v-icon>
+                      <RIcon :size="20"> mdi-key </RIcon>
                     </template>
-                  </v-img>
-                </v-icon>
+                  </RImg>
+                </RIcon>
               </template>
               {{
                 t("login.login-oidc", {
@@ -196,14 +205,14 @@ onMounted(async () => {
                 })
               }}
               <template #loader>
-                <v-progress-circular
+                <RProgressCircular
                   color="primary"
                   :width="2"
                   :size="20"
                   indeterminate
                 />
               </template>
-            </v-btn>
+            </RBtn>
           </template>
           <div v-if="!loginDisabled" class="my-6 text-right">
             <a
@@ -225,7 +234,7 @@ onMounted(async () => {
       >
         <v-col cols="10">
           <v-form @submit.prevent="sendReset">
-            <v-text-field
+            <RTextField
               v-model="forgotUser"
               :label="t('login.username')"
               type="text"
@@ -233,7 +242,7 @@ onMounted(async () => {
               prepend-inner-icon="mdi-account"
               variant="underlined"
             />
-            <v-btn
+            <RBtn
               type="submit"
               class="bg-toplayer mt-4"
               variant="text"
@@ -242,19 +251,19 @@ onMounted(async () => {
               :disabled="sendingReset || !forgotUser"
             >
               <template #prepend>
-                <v-icon>mdi-lock-reset</v-icon>
+                <RIcon>mdi-lock-reset</RIcon>
               </template>
               {{ t("login.send-reset-link") }}
               <template #loader>
-                <v-progress-circular
+                <RProgressCircular
                   color="primary"
                   :width="2"
                   :size="20"
                   indeterminate
                 />
               </template>
-            </v-btn>
-            <v-btn
+            </RBtn>
+            <RBtn
               variant="text"
               block
               class="mt-2"
@@ -265,10 +274,10 @@ onMounted(async () => {
               "
             >
               {{ t("common.cancel") }}
-            </v-btn>
+            </RBtn>
           </v-form>
         </v-col>
       </v-row>
     </v-expand-transition>
-  </v-card>
+  </RCard>
 </template>

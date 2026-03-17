@@ -37,6 +37,12 @@
       "dependsOn": ["Launch frontend", "Launch backend"],
       "problemMatcher": [],
       "dependsOrder": "parallel"
+    },
+    {
+      "label": "Launch Storybook server",
+      "type": "shell",
+      "command": "cd frontend && npm run storybook",
+      "problemMatcher": []
     }
   ]
 }

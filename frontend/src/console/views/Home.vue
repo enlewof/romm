@@ -11,7 +11,6 @@ import {
 } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import RIsotipo from "@/components/common/RIsotipo.vue";
 import useFavoriteToggle from "@/composables/useFavoriteToggle";
 import CollectionCard from "@/console/components/CollectionCard.vue";
 import GameCard from "@/console/components/GameCard.vue";
@@ -30,6 +29,7 @@ import { useInputScope } from "@/console/composables/useInputScope";
 import { useRovingDom } from "@/console/composables/useRovingDom";
 import { useSpatialNav } from "@/console/composables/useSpatialNav";
 import type { InputAction } from "@/console/input/actions";
+import { RIsotipo } from "@/lib";
 import { ROUTES } from "@/plugins/router";
 import storeCollections from "@/stores/collections";
 import storeConsole from "@/stores/console";

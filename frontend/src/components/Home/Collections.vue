@@ -2,7 +2,8 @@
 import { useLocalStorage, useScroll } from "@vueuse/core";
 import { ref, watch } from "vue";
 import CollectionCard from "@/components/common/Collection/Card.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RBtn, RIcon } from "@/lib";
+import { RSection } from "@/lib";
 import { type CollectionType } from "@/stores/collections";
 import { views } from "@/utils";
 
@@ -45,16 +46,16 @@ watch(windowY, () => {
 <template>
   <RSection icon="mdi-bookmark-box-multiple" :title="props.title">
     <template #toolbar-append>
-      <v-btn
+      <RBtn
         aria-label="Toggle collections grid view"
         icon
         rounded="0"
         @click="toggleGridCollections"
       >
-        <v-icon>
+        <RIcon>
           {{ gridCollections ? "mdi-view-comfy" : "mdi-view-column" }}
-        </v-icon>
-      </v-btn>
+        </RIcon>
+      </RBtn>
     </template>
     <template #content>
       <v-row

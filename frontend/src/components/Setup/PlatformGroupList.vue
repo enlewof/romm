@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import PlatformListItem from "@/components/common/Platform/ListItem.vue";
+import { RCheckbox, RChip, RList } from "@/lib";
 import type { Platform } from "@/stores/platforms";
 
 const props = defineProps<{
@@ -46,7 +47,7 @@ const countSelectedInGroup = (platforms: Platform[]) => {
       <v-expansion-panel-title class="text-white text-shadow">
         <template #default>
           <div class="d-flex align-center w-100">
-            <v-checkbox
+            <RCheckbox
               v-if="showCheckboxes && onToggleGroup && isGroupFullySelected"
               :model-value="isGroupFullySelected(platforms)"
               hide-details
@@ -60,27 +61,27 @@ const countSelectedInGroup = (platforms: Platform[]) => {
               <span class="ml-2 text-caption text-grey"
                 >({{ platforms.length }})</span
               >
-              <v-chip
+              <RChip
                 v-if="showCheckboxes && countSelectedInGroup(platforms) > 0"
                 size="x-small"
                 color="primary"
                 class="ml-2"
               >
                 {{ countSelectedInGroup(platforms) }} selected
-              </v-chip>
+              </RChip>
             </div>
           </div>
         </template>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <v-list lines="two" class="py-1 px-0 bg-transparent">
+        <RList lines="two" class="py-1 px-0 bg-transparent">
           <PlatformListItem
             v-for="platform in platforms"
             :key="platform.fs_slug"
             :platform="platform"
           >
             <template v-if="showCheckboxes" #prepend>
-              <v-checkbox
+              <RCheckbox
                 v-model="selectedPlatformsModel"
                 :value="platform.fs_slug"
                 hide-details
@@ -89,7 +90,7 @@ const countSelectedInGroup = (platforms: Platform[]) => {
               />
             </template>
           </PlatformListItem>
-        </v-list>
+        </RList>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>

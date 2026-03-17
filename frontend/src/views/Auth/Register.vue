@@ -3,6 +3,7 @@ import type { Emitter } from "mitt";
 import { inject, ref, onBeforeMount } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
+import { RBtn, RCard, RIcon, RImg, RProgressCircular, RTextField } from "@/lib";
 import userApi from "@/services/api/user";
 import storeUsers from "@/stores/users";
 import type { Events } from "@/types/emitter";
@@ -55,12 +56,12 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <v-card class="translucent py-8 px-5" width="500">
-    <v-img src="/assets/isotipo.svg" class="mx-auto mb-8" width="80" />
+  <RCard class="translucent py-8 px-5" width="500">
+    <RImg src="/assets/isotipo.svg" class="mx-auto mb-8" width="80" />
     <v-row class="text-white justify-center mt-2" no-gutters>
       <v-col cols="10">
         <v-form v-model="validForm" @submit.prevent="register">
-          <v-text-field
+          <RTextField
             v-model="username"
             :label="t('settings.username')"
             type="text"
@@ -69,7 +70,7 @@ onBeforeMount(() => {
             variant="underlined"
             class="mt-4"
           />
-          <v-text-field
+          <RTextField
             v-model="email"
             :label="t('settings.email')"
             type="text"
@@ -78,7 +79,7 @@ onBeforeMount(() => {
             variant="underlined"
             class="mt-4"
           />
-          <v-text-field
+          <RTextField
             v-model="password"
             :label="t('settings.password')"
             :type="visiblePassword ? 'text' : 'password'"
@@ -89,7 +90,7 @@ onBeforeMount(() => {
             class="mt-4"
             @click:append-inner="visiblePassword = !visiblePassword"
           />
-          <v-btn
+          <RBtn
             type="submit"
             class="bg-toplayer mt-4"
             variant="text"
@@ -97,18 +98,18 @@ onBeforeMount(() => {
             :disabled="!validForm"
           >
             <template #prepend>
-              <v-icon>mdi-account-check</v-icon>
+              <RIcon>mdi-account-check</RIcon>
             </template>
             {{ t("common.create") }}
             <template #loader>
-              <v-progress-circular
+              <RProgressCircular
                 color="primary"
                 :width="2"
                 :size="20"
                 indeterminate
               />
             </template>
-          </v-btn>
+          </RBtn>
         </v-form>
         <div class="my-6 text-right">
           <a class="text-blue text-caption" href="/login">
@@ -117,5 +118,5 @@ onBeforeMount(() => {
         </div>
       </v-col>
     </v-row>
-  </v-card>
+  </RCard>
 </template>

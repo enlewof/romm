@@ -3,7 +3,7 @@ import type { Emitter } from "mitt";
 import { onBeforeUnmount } from "vue";
 import { inject, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import type { Events } from "@/types/emitter";
 
 const { t } = useI18n();

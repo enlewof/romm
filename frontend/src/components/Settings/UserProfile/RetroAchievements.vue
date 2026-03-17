@@ -3,7 +3,7 @@ import type { Emitter } from "mitt";
 import { inject, ref } from "vue";
 import { watch } from "vue";
 import { useI18n } from "vue-i18n";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import userApi from "@/services/api/user";
 import storeAuth from "@/stores/auth";
 import type { Events } from "@/types/emitter";

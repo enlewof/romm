@@ -4,7 +4,20 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useDisplay } from "vuetify";
 import PlatformGroupList from "@/components/Setup/PlatformGroupList.vue";
-import RDialog from "@/components/common/RDialog.vue";
+import {
+  RAvatar,
+  RBtn,
+  RBtnGroup,
+  RCard,
+  RChip,
+  RDialog,
+  RImg,
+  RListItem,
+  RProgressCircular,
+  RTab,
+  RTabs,
+  RTextField,
+} from "@/lib";
 import router from "@/plugins/router";
 import { ROUTES } from "@/plugins/router";
 import { refetchCSRFToken } from "@/services/api";
@@ -436,13 +449,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-card
+  <RCard
     class="translucent px-3 d-flex flex-column"
     width="1100"
     height="85dvh"
   >
     <v-card-title>
-      <v-img src="/assets/isotipo.svg" class="mx-auto mt-6" width="70" />
+      <RImg src="/assets/isotipo.svg" class="mx-auto mt-6" width="70" />
     </v-card-title>
     <v-stepper
       v-model="step"
@@ -511,10 +524,10 @@ onMounted(() => {
                   no-gutters
                 >
                   <v-col class="text-center py-8">
-                    <v-progress-circular
+                    <RProgressCircular
                       indeterminate
                       color="primary"
-                      size="64"
+                      :size="64"
                     />
                   </v-col>
                 </v-row>
@@ -559,18 +572,18 @@ onMounted(() => {
                           <strong>{{ t("setup.detected-platforms") }}</strong>
                         </div>
                         <div class="mb-2 ml-4">
-                          <v-chip label>
+                          <RChip label>
                             {{ libraryInfo?.existing_platforms.length }}
                             {{ t("setup.platforms") }}
-                          </v-chip>
-                          <v-chip class="ml-2" variant="tonal" label>
+                          </RChip>
+                          <RChip class="ml-2" variant="tonal" label>
                             {{ totalDetectedGames }}
                             {{
                               totalDetectedGames !== 1
                                 ? t("setup.games")
                                 : t("setup.game")
                             }}
-                          </v-chip>
+                          </RChip>
                         </div>
                         <PlatformGroupList
                           :grouped-platforms="groupedExistingPlatforms"
@@ -591,7 +604,7 @@ onMounted(() => {
                           }}</strong>
                         </div>
                         <div class="mb-2 ml-4">
-                          <v-chip
+                          <RChip
                             variant="tonal"
                             color="primary"
                             @click="selectAll = !selectAll"
@@ -602,10 +615,10 @@ onMounted(() => {
                                 ? t("setup.deselect-all")
                                 : t("setup.select-all")
                             }}
-                          </v-chip>
-                          <v-chip class="ml-2" label
+                          </RChip>
+                          <RChip class="ml-2" label
                             >{{ selectedAvailableCount }}
-                            {{ t("setup.selected") }}</v-chip
+                            {{ t("setup.selected") }}</RChip
                           >
                         </div>
                         <PlatformGroupList
@@ -622,38 +635,38 @@ onMounted(() => {
 
                     <!-- Mobile: Tabs for each section -->
                     <v-col v-else cols="12">
-                      <v-tabs v-model="mobileTab" centered grow class="mb-3">
-                        <v-tab
+                      <RTabs v-model="mobileTab" centered grow class="mb-3">
+                        <RTab
                           v-if="hasExistingPlatforms"
                           :value="0"
                           class="text-white text-shadow"
                         >
                           {{ t("setup.detected-platforms") }}
-                        </v-tab>
-                        <v-tab
+                        </RTab>
+                        <RTab
                           :value="hasExistingPlatforms ? 1 : 0"
                           class="text-white text-shadow"
                         >
                           {{ t("setup.supported-platforms") }}
-                        </v-tab>
-                      </v-tabs>
+                        </RTab>
+                      </RTabs>
 
                       <v-window v-model="mobileTab">
                         <!-- Detected platforms tab -->
                         <v-window-item v-if="hasExistingPlatforms" :value="0">
                           <div class="mb-2 ml-4">
-                            <v-chip label>
+                            <RChip label>
                               {{ libraryInfo?.existing_platforms.length }}
                               {{ t("setup.platforms") }}
-                            </v-chip>
-                            <v-chip class="ml-2" variant="tonal" label>
+                            </RChip>
+                            <RChip class="ml-2" variant="tonal" label>
                               {{ totalDetectedGames }}
                               {{
                                 totalDetectedGames !== 1
                                   ? t("setup.games")
                                   : t("setup.game")
                               }}
-                            </v-chip>
+                            </RChip>
                           </div>
                           <PlatformGroupList
                             :grouped-platforms="groupedExistingPlatforms"
@@ -664,7 +677,7 @@ onMounted(() => {
                         <!-- Available platforms tab -->
                         <v-window-item :value="hasExistingPlatforms ? 1 : 0">
                           <div class="mb-2 ml-4">
-                            <v-chip
+                            <RChip
                               variant="tonal"
                               color="primary"
                               @click="selectAll = !selectAll"
@@ -675,10 +688,10 @@ onMounted(() => {
                                   ? t("setup.deselect-all")
                                   : t("setup.select-all")
                               }}
-                            </v-chip>
-                            <v-chip class="ml-2" label
+                            </RChip>
+                            <RChip class="ml-2" label
                               >{{ selectedAvailableCount }}
-                              {{ t("setup.selected") }}</v-chip
+                              {{ t("setup.selected") }}</RChip
                             >
                           </div>
                           <PlatformGroupList
@@ -708,7 +721,7 @@ onMounted(() => {
                 >
                   <v-col cols="12" md="8">
                     <v-form @submit.prevent>
-                      <v-text-field
+                      <RTextField
                         v-model="defaultAdminUser.username"
                         :label="`${t('settings.username')} *`"
                         type="text"
@@ -718,7 +731,7 @@ onMounted(() => {
                         prepend-inner-icon="mdi-account"
                         variant="underlined"
                       />
-                      <v-text-field
+                      <RTextField
                         v-model="defaultAdminUser.email"
                         :label="`${t('settings.email')} *`"
                         type="text"
@@ -728,7 +741,7 @@ onMounted(() => {
                         prepend-inner-icon="mdi-account"
                         variant="underlined"
                       />
-                      <v-text-field
+                      <RTextField
                         v-model="defaultAdminUser.password"
                         :label="`${t('settings.password')} *`"
                         :type="visiblePassword ? 'text' : 'password'"
@@ -742,7 +755,7 @@ onMounted(() => {
                         variant="underlined"
                         @click:append-inner="visiblePassword = !visiblePassword"
                       />
-                      <v-text-field
+                      <RTextField
                         v-model="repeatPassword"
                         :label="`${t('settings.repeat-password')} *`"
                         :type="visibleRepeatPassword ? 'text' : 'password'"
@@ -780,7 +793,7 @@ onMounted(() => {
                   no-gutters
                 >
                   <v-col cols="12" sm="8">
-                    <v-list-item
+                    <RListItem
                       v-for="source in metadataOptions"
                       :key="source.value"
                       class="text-white text-shadow"
@@ -790,15 +803,15 @@ onMounted(() => {
                       "
                     >
                       <template #prepend>
-                        <v-avatar variant="text" size="30" rounded="1">
-                          <v-img :src="source.logo_path" />
-                        </v-avatar>
+                        <RAvatar variant="text" :size="30" rounded="1">
+                          <RImg :src="source.logo_path" />
+                        </RAvatar>
                       </template>
                       <template #append>
                         <span v-if="source.disabled" class="ml-2">❌</span>
                         <span v-else class="ml-2">✅</span>
                       </template>
-                    </v-list-item>
+                    </RListItem>
                   </v-col>
                 </v-row>
               </v-col>
@@ -809,24 +822,24 @@ onMounted(() => {
         <div class="flex-grow-0">
           <v-stepper-actions :disabled="step == 2 && !filledAdminUser">
             <template #prev>
-              <v-btn
+              <RBtn
                 class="text-white text-shadow"
                 :ripple="false"
                 :disabled="isFirstStep"
                 @click="prev"
               >
                 {{ isFirstStep ? "" : t("setup.previous") }}
-              </v-btn>
+              </RBtn>
             </template>
             <template #next>
-              <v-btn
+              <RBtn
                 class="text-white text-shadow"
                 :loading="isLastStep && creatingPlatforms"
                 @click="!isLastStep ? handleNext(next) : finishWizard()"
                 @keydown.enter="!isLastStep ? handleNext(next) : finishWizard()"
               >
                 {{ !isLastStep ? t("setup.next") : t("setup.finish") }}
-              </v-btn>
+              </RBtn>
             </template>
           </v-stepper-actions>
         </div>
@@ -847,21 +860,18 @@ onMounted(() => {
       </template>
       <template #footer>
         <v-row class="justify-center my-2" no-gutters>
-          <v-btn-group divided density="compact">
-            <v-btn class="bg-toplayer" @click="showConfirmDialog = false">
+          <RBtnGroup divided density="compact">
+            <RBtn class="bg-toplayer" @click="showConfirmDialog = false">
               {{ t("setup.cancel") }}
-            </v-btn>
-            <v-btn
-              class="bg-toplayer text-primary"
-              @click="handleConfirmDialog"
-            >
+            </RBtn>
+            <RBtn class="bg-toplayer text-primary" @click="handleConfirmDialog">
               {{ t("setup.continue") }}
-            </v-btn>
-          </v-btn-group>
+            </RBtn>
+          </RBtnGroup>
         </v-row>
       </template>
     </RDialog>
-  </v-card>
+  </RCard>
 </template>
 <style lang="css" scoped>
 .v-expansion-panel-text__wrapper {

@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 import CreateUserDialog from "@/components/Settings/Administration/Users/Dialog/CreateUser.vue";
 import DeleteUserDialog from "@/components/Settings/Administration/Users/Dialog/DeleteUser.vue";
 import InviteLinkDialog from "@/components/Settings/Administration/Users/Dialog/InviteLink.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import userApi from "@/services/api/user";
 import storeAuth from "@/stores/auth";
 import storeUsers, { type User } from "@/stores/users";

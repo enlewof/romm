@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Skeleton from "@/components/common/Game/Card/Skeleton.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import { RECENT_ROMS_LIMIT } from "@/services/api/rom";
 import { views } from "@/utils";
 

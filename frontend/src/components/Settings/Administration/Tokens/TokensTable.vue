@@ -2,7 +2,7 @@
 import type { Emitter } from "mitt";
 import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import clientTokenApi, {
   type ClientTokenAdminSchema,
 } from "@/services/api/client-token";

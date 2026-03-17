@@ -4,7 +4,14 @@ import { useTheme } from "vuetify";
 import EmptyFirmware from "@/components/common/EmptyStates/EmptyFirmware.vue";
 import EmptyGame from "@/components/common/EmptyStates/EmptyGame.vue";
 import EmptyPlatform from "@/components/common/EmptyStates/EmptyPlatform.vue";
-import RIsotipo from "@/components/common/RIsotipo.vue";
+import { RBtn } from "@/lib/RBtn";
+import { RCard } from "@/lib/RCard";
+import { RCardText } from "@/lib/RCardText";
+import { RDivider } from "@/lib/RDivider";
+import { RIcon } from "@/lib/RIcon";
+import { RIsotipo } from "@/lib/RIsotipo";
+import { RProgressCircular } from "@/lib/RProgressCircular";
+import { RToolbar } from "@/lib/RToolbar";
 
 withDefaults(
   defineProps<{
@@ -64,13 +71,13 @@ onMounted(() => {
     @click:outside="closeDialog"
     @keydown.esc="closeDialog"
   >
-    <v-card :min-height="height" :max-height="height">
-      <v-toolbar density="compact" class="bg-toplayer">
-        <v-icon v-if="icon" :icon="icon" class="ml-5" />
+    <RCard :min-height="height" :max-height="height">
+      <RToolbar density="compact" class="bg-toplayer">
+        <RIcon v-if="icon" :icon="icon" class="ml-5" />
         <RIsotipo v-if="showRommIcon" :size="30" class="mx-4" />
         <slot name="header" />
         <template #append>
-          <v-btn
+          <RBtn
             size="small"
             variant="text"
             class="rounded"
@@ -78,20 +85,20 @@ onMounted(() => {
             @click="closeDialog"
           />
         </template>
-      </v-toolbar>
+      </RToolbar>
 
-      <v-divider />
+      <RDivider />
 
-      <v-toolbar v-if="hasToolbarSlot" density="compact" class="bg-toplayer">
+      <RToolbar v-if="hasToolbarSlot" density="compact" class="bg-toplayer">
         <slot name="toolbar" />
-      </v-toolbar>
-      <v-divider />
+      </RToolbar>
+      <RDivider />
 
-      <v-card-text v-if="hasPrependSlot" class="pa-0">
+      <RCardText v-if="hasPrependSlot" class="pa-0">
         <slot name="prepend" />
-      </v-card-text>
+      </RCardText>
 
-      <v-card-text
+      <RCardText
         id="r-dialog-content"
         class="pa-0 d-flex flex-column"
         :class="{ scroll: scrollContent }"
@@ -101,7 +108,7 @@ onMounted(() => {
           class="justify-center align-center flex-grow-1 my-4"
           no-gutters
         >
-          <v-progress-circular
+          <RProgressCircular
             :width="2"
             :size="40"
             color="primary"
@@ -121,17 +128,17 @@ onMounted(() => {
         </v-row>
 
         <slot v-if="!loadingCondition && !emptyStateCondition" name="content" />
-      </v-card-text>
-      <v-card-text v-if="hasAppendSlot" class="pa-0">
+      </RCardText>
+      <RCardText v-if="hasAppendSlot" class="pa-0">
         <slot name="append" />
-      </v-card-text>
+      </RCardText>
 
       <template v-if="hasFooterSlot">
-        <v-divider />
-        <v-toolbar class="bg-toplayer" density="compact">
+        <RDivider />
+        <RToolbar class="bg-toplayer" density="compact">
           <slot name="footer" />
-        </v-toolbar>
+        </RToolbar>
       </template>
-    </v-card>
+    </RCard>
   </v-dialog>
 </template>

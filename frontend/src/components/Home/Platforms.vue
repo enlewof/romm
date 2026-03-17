@@ -4,7 +4,8 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import PlatformCard from "@/components/common/Platform/Card.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RBtn, RIcon } from "@/lib";
+import { RSection } from "@/lib";
 import storePlatforms from "@/stores/platforms";
 import { views } from "@/utils";
 
@@ -28,16 +29,16 @@ function onHover(emitData: { isHovering: boolean; id: number }) {
 <template>
   <RSection icon="mdi-controller" :title="t('common.platforms')">
     <template #toolbar-append>
-      <v-btn
+      <RBtn
         aria-label="Toggle platforms grid view"
         icon
         rounded="0"
         @click="toggleGridPlatforms"
       >
-        <v-icon>
+        <RIcon>
           {{ gridPlatforms ? "mdi-view-comfy" : "mdi-view-column" }}
-        </v-icon>
-      </v-btn>
+        </RIcon>
+      </RBtn>
     </template>
     <template #content>
       <v-row

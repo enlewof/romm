@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import type { MetadataCoverageItem } from "@/__generated__/models/MetadataCoverageItem";
 import type { RegionBreakdownItem } from "@/__generated__/models/RegionBreakdownItem";
 import PlatformIcon from "@/components/common/Platform/PlatformIcon.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import storeHeartbeat from "@/stores/heartbeat";
 import storePlatforms from "@/stores/platforms";
 import { formatBytes, platformCategoryToIcon, regionToEmoji } from "@/utils";

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { RCard, RCardText, RChip } from "@/lib";
 import api from "@/services/api";
 import { formatBytes } from "@/utils";
 
@@ -21,61 +22,61 @@ onBeforeMount(() => {
 });
 </script>
 <template>
-  <v-card class="ma-2">
-    <v-card-text class="pa-1">
+  <RCard class="ma-2">
+    <RCardText class="pa-1">
       <v-row no-gutters class="flex-nowrap overflow-x-auto text-center">
         <v-col>
-          <v-chip
+          <RChip
             class="text-overline"
             prepend-icon="mdi-controller"
             variant="text"
             label
           >
             {{ t("common.platforms-n", stats.PLATFORMS) }}
-          </v-chip>
+          </RChip>
         </v-col>
         <v-col>
-          <v-chip
+          <RChip
             class="text-overline"
             prepend-icon="mdi-disc"
             variant="text"
             label
           >
             {{ t("common.games-n", stats.ROMS) }}
-          </v-chip>
+          </RChip>
         </v-col>
         <v-col>
-          <v-chip
+          <RChip
             class="text-overline"
             prepend-icon="mdi-content-save"
             variant="text"
             label
           >
             {{ t("common.saves-n", stats.SAVES) }}
-          </v-chip>
+          </RChip>
         </v-col>
         <v-col>
-          <v-chip
+          <RChip
             class="text-overline"
             prepend-icon="mdi-file"
             variant="text"
             label
           >
             {{ t("common.states-n", stats.STATES) }}
-          </v-chip>
+          </RChip>
         </v-col>
         <v-col>
-          <v-chip
+          <RChip
             class="text-overline"
             prepend-icon="mdi-image-area"
             variant="text"
             label
           >
             {{ t("common.screenshots-n", stats.SCREENSHOTS) }}
-          </v-chip>
+          </RChip>
         </v-col>
         <v-col>
-          <v-chip
+          <RChip
             class="text-overline"
             prepend-icon="mdi-harddisk"
             variant="text"
@@ -83,9 +84,9 @@ onBeforeMount(() => {
           >
             {{ t("common.size-on-disk") }}:
             {{ formatBytes(stats.TOTAL_FILESIZE_BYTES, 1) }}
-          </v-chip>
+          </RChip>
         </v-col>
       </v-row>
-    </v-card-text>
-  </v-card>
+    </RCardText>
+  </RCard>
 </template>

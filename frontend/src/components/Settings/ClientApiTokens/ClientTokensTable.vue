@@ -4,7 +4,7 @@ import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import CreateClientTokenDialog from "@/components/Settings/ClientApiTokens/Dialog/CreateClientToken.vue";
 import DeleteClientTokenDialog from "@/components/Settings/ClientApiTokens/Dialog/DeleteClientToken.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import clientTokenApi, {
   type ClientTokenSchema,
 } from "@/services/api/client-token";

@@ -3,7 +3,7 @@ import type { Emitter } from "mitt";
 import { inject, ref } from "vue";
 import { useDisplay } from "vuetify";
 import type { StateSchema } from "@/__generated__";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import stateApi from "@/services/api/state";
 import storeRoms, { type DetailedRom } from "@/stores/roms";
 import type { Events } from "@/types/emitter";

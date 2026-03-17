@@ -25,7 +25,9 @@
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "generate": "openapi --input http://127.0.0.1:3000/openapi.json --output ./src/__generated__ --client axios --useOptions --useUnionTypes --exportServices false --exportSchemas false --exportCore false",
-    "lint": "eslint ./src --ext .vue,.js,.ts --quiet"
+    "lint": "eslint ./src --ext .vue,.js,.ts --quiet",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
@@ -72,7 +74,19 @@
     "vite-plugin-pwa": "^0.21.1",
     "vite-plugin-static-copy": "^3.2.0",
     "vite-plugin-vuetify": "^2.0.4",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^2.2.8",
+    "storybook": "^10.2.19",
+    "@storybook/vue3-vite": "^10.2.19",
+    "@chromatic-com/storybook": "^5.0.1",
+    "@storybook/addon-vitest": "^10.2.19",
+    "@storybook/addon-a11y": "^10.2.19",
+    "@storybook/addon-docs": "^10.2.19",
+    "@storybook/addon-onboarding": "^10.2.19",
+    "eslint-plugin-storybook": "^10.2.19",
+    "vitest": "^4.1.0",
+    "playwright": "^1.58.2",
+    "@vitest/browser-playwright": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
   },
   "engines": {
     "node": "24"

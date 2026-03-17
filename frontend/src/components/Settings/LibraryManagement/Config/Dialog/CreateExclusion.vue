@@ -3,7 +3,7 @@ import type { Emitter } from "mitt";
 import { inject, ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useDisplay } from "vuetify";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import configApi from "@/services/api/config";
 import storeConfig from "@/stores/config";
 import type { Events } from "@/types/emitter";

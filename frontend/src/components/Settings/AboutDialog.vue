@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Emitter } from "mitt";
 import { ref, inject } from "vue";
-import RDialog from "@/components/common/RDialog.vue";
-import RIsotipo from "@/components/common/RIsotipo.vue";
+import { RDialog } from "@/lib";
+import { RIsotipo } from "@/lib";
 import storeHeartbeat from "@/stores/heartbeat";
 import type { Events } from "@/types/emitter";
 

@@ -6,7 +6,7 @@ import { inject } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import { ROUTES } from "@/plugins/router";
 import collectionApi from "@/services/api/collection";
 import storeCollections from "@/stores/collections";

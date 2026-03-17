@@ -4,7 +4,7 @@ import qrcode from "qrcode";
 import { computed, inject, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useDisplay } from "vuetify";
-import RDialog from "@/components/common/RDialog.vue";
+import { RDialog } from "@/lib";
 import clientTokenApi, {
   type ClientTokenSchema,
 } from "@/services/api/client-token";

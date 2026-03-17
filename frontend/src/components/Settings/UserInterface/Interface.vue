@@ -3,8 +3,8 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useDisplay } from "vuetify";
 import InterfaceOption from "@/components/Settings/UserInterface/InterfaceOption.vue";
-import RSection from "@/components/common/RSection.vue";
 import { useUISettings } from "@/composables/useUISettings";
+import { RSection } from "@/lib";
 import storeCollections from "@/stores/collections";
 
 const { t } = useI18n();

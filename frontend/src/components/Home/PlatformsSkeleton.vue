@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import RSection from "@/components/common/RSection.vue";
+import { RSection } from "@/lib";
 import { views } from "@/utils";
 
 const { t } = useI18n();

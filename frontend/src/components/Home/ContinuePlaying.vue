@@ -4,7 +4,8 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import GameCard from "@/components/common/Game/Card/Base.vue";
-import RSection from "@/components/common/RSection.vue";
+import { RBtn, RIcon } from "@/lib";
+import { RSection } from "@/lib";
 import storeRoms from "@/stores/roms";
 import { views } from "@/utils";
 
@@ -43,16 +44,16 @@ function onClosedMenu() {
 <template>
   <RSection icon="mdi-play" :title="t('home.continue-playing')">
     <template #toolbar-append>
-      <v-btn
+      <RBtn
         aria-label="Toggle continue playing games grid view"
         icon
         rounded="0"
         @click="toggleGridContinuePlaying"
       >
-        <v-icon>
+        <RIcon>
           {{ gridContinuePlayingRoms ? "mdi-view-comfy" : "mdi-view-column" }}
-        </v-icon>
-      </v-btn>
+        </RIcon>
+      </RBtn>
     </template>
     <template #content>
       <v-row

@@ -1,0 +1,149 @@
+/*
+ * RoMM UI Library — Vuetify structural reset
+ *
+ * When running unstyled (without vuetify/styles), Vuetify components render
+ * as bare HTML. This file provides the absolute minimum CSS needed for
+ * Vuetify's internal mechanics to work (overlays, transitions, icons, etc.)
+ * while leaving all visual styling to Tailwind + our component CSS.
+ */
+
+/* ── Overlay / Dialog machinery ─────────────────────────────── */
+.v-overlay-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.v-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.v-overlay--active {
+  pointer-events: auto;
+}
+
+.v-overlay__scrim {
+  position: fixed;
+  inset: 0;
+}
+
+.v-overlay__content {
+  position: relative;
+  pointer-events: auto;
+  outline: none;
+}
+
+/* ── Icon sizing ────────────────────────────────────────────── */
+.v-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  font-size: inherit;
+  line-height: 1;
+}
+
+.v-icon .mdi::before {
+  font-size: inherit;
+}
+
+/* ── Transitions ────────────────────────────────────────────── */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.dialog-transition-enter-active,
+.dialog-transition-leave-active {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dialog-transition-enter-from,
+.dialog-transition-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* ── Progress / Loading ─────────────────────────────────────── */
+.v-progress-circular {
+  display: inline-flex;
+  position: relative;
+  vertical-align: middle;
+}
+
+.v-progress-circular svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.v-progress-circular__overlay {
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.v-progress-circular--indeterminate svg {
+  animation: v-progress-circular-rotate 1.4s linear infinite;
+}
+
+.v-progress-circular--indeterminate .v-progress-circular__overlay {
+  animation: v-progress-circular-dash 1.4s ease-in-out infinite;
+  stroke-dasharray: 80, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+}
+
+@keyframes v-progress-circular-rotate {
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+@keyframes v-progress-circular-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: -15px;
+  }
+  100% {
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: -125px;
+  }
+}
+
+/* ── Ripple effect ──────────────────────────────────────────── */
+.v-ripple__container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.v-ripple__animation {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.12;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ── Ensure components that need position context have it ──── */
+.v-btn {
+  position: relative;
+}
