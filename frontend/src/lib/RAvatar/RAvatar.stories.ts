@@ -42,7 +42,8 @@ export const Default: Story = {
 export const WithImage: Story = {
   render: () => ({
     components: { RAvatar },
-    template: '<RAvatar image="https://picsum.photos/80" :size="80" />',
+    template:
+      '<RAvatar image="https://raw.githubusercontent.com/rommapp/romm/refs/heads/master/.github/resources/isotipo.svg" :size="80" />',
   }),
 };
 

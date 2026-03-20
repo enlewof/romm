@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
   args: {
-    src: "https://raw.githubusercontent.com/rommapp/romm/master/.github/resources/isotipo.png",
+    src: "https://raw.githubusercontent.com/rommapp/romm/refs/heads/master/.github/resources/social_preview.png",
     width: "300",
     cover: false,
     contain: false,
@@ -42,7 +42,7 @@ export const Default: Story = {
   render: () => ({
     components: { RImg },
     template:
-      '<RImg src="https://raw.githubusercontent.com/rommapp/romm/master/.github/resources/isotipo.png" :width="300" />',
+      '<RImg src="https://raw.githubusercontent.com/rommapp/romm/refs/heads/master/.github/resources/social_preview.png" :width="300" />',
   }),
 };
 
@@ -50,7 +50,7 @@ export const WithAspectRatio: Story = {
   render: () => ({
     components: { RImg },
     template:
-      '<RImg src="https://raw.githubusercontent.com/rommapp/romm/master/.github/resources/isotipo.png" :aspect-ratio="16/9" :width="300" cover />',
+      '<RImg src="https://raw.githubusercontent.com/rommapp/romm/refs/heads/master/.github/resources/social_preview.png" :aspect-ratio="16/9" :width="300" cover />',
   }),
 };
 
@@ -58,7 +58,7 @@ export const WithPlaceholder: Story = {
   render: () => ({
     components: { RImg },
     template: `
-      <RImg src="https://raw.githubusercontent.com/rommapp/romm/master/.github/resources/isotipo.png" :width="300" :aspect-ratio="16/9">
+      <RImg src="https://raw.githubusercontent.com/rommapp/romm/refs/heads/master/.github/resources/social_preview.png" :width="300" :aspect-ratio="16/9">
         <template #placeholder>
           <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
             Loading...
