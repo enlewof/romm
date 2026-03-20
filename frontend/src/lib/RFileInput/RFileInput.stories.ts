@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RFileInput from "./RFileInput.vue";
 
 const meta = {
-  title: "Components/RFileInput",
+  title: "Forms/RFileInput",
   component: RFileInput,
   tags: ["autodocs"],
 } satisfies Meta<typeof RFileInput>;

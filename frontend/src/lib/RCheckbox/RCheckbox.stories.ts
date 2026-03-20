@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RCheckbox from "./RCheckbox.vue";
 
 const meta = {
-  title: "Components/RCheckbox",
+  title: "Forms/RCheckbox",
   component: RCheckbox,
   tags: ["autodocs"],
 } satisfies Meta<typeof RCheckbox>;

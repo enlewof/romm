@@ -3,7 +3,7 @@ import { RBtn } from "../RBtn";
 import RTooltip from "./RTooltip.vue";
 
 const meta = {
-  title: "Components/RTooltip",
+  title: "Data Display/RTooltip",
   component: RTooltip,
   tags: ["autodocs"],
 } satisfies Meta<typeof RTooltip>;

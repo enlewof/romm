@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RIcon from "./RIcon.vue";
 
 const meta = {
-  title: "Components/RIcon",
+  title: "Data Display/RIcon",
   component: RIcon,
   tags: ["autodocs"],
   argTypes: {

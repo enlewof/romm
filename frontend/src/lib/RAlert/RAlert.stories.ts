@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RAlert from "./RAlert.vue";
 
 const meta = {
-  title: "Components/RAlert",
+  title: "Feedback/RAlert",
   component: RAlert,
   tags: ["autodocs"],
   argTypes: {

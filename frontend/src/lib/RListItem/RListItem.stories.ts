@@ -3,7 +3,7 @@ import { RList } from "../RList";
 import RListItem from "./RListItem.vue";
 
 const meta = {
-  title: "Components/RListItem",
+  title: "Data Display/RListItem",
   component: RListItem,
   tags: ["autodocs"],
 } satisfies Meta<typeof RListItem>;

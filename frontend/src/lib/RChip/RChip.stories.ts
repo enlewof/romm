@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RChip from "./RChip.vue";
 
 const meta = {
-  title: "Components/RChip",
+  title: "Data Display/RChip",
   component: RChip,
   tags: ["autodocs"],
   argTypes: {

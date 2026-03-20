@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RToolbar from "./RToolbar.vue";
 
 const meta = {
-  title: "Components/RToolbar",
+  title: "Containment/RToolbar",
   component: RToolbar,
   tags: ["autodocs"],
   argTypes: {

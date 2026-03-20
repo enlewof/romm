@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RSection from "./RSection.vue";
 
 const meta = {
-  title: "Components/RSection",
+  title: "Containment/RSection",
   component: RSection,
   tags: ["autodocs"],
 } satisfies Meta<typeof RSection>;

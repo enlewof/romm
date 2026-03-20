@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RBadge from "./RBadge.vue";
 
 const meta = {
-  title: "Components/RBadge",
+  title: "Data Display/RBadge",
   component: RBadge,
   tags: ["autodocs"],
 } satisfies Meta<typeof RBadge>;

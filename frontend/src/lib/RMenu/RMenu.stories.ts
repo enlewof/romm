@@ -5,7 +5,7 @@ import { RListItem } from "../RListItem";
 import RMenu from "./RMenu.vue";
 
 const meta = {
-  title: "Components/RMenu",
+  title: "Actions/RMenu",
   component: RMenu,
   tags: ["autodocs"],
 } satisfies Meta<typeof RMenu>;

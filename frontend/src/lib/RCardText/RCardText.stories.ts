@@ -3,7 +3,7 @@ import { RCard } from "../RCard";
 import RCardText from "./RCardText.vue";
 
 const meta = {
-  title: "Components/RCardText",
+  title: "Containment/RCardText",
   component: RCardText,
   tags: ["autodocs"],
 } satisfies Meta<typeof RCardText>;

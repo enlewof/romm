@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RTextarea from "./RTextarea.vue";
 
 const meta = {
-  title: "Components/RTextarea",
+  title: "Forms/RTextarea",
   component: RTextarea,
   tags: ["autodocs"],
 } satisfies Meta<typeof RTextarea>;

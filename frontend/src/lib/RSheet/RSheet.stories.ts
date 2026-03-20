@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RSheet from "./RSheet.vue";
 
 const meta = {
-  title: "Components/RSheet",
+  title: "Containment/RSheet",
   component: RSheet,
   tags: ["autodocs"],
 } satisfies Meta<typeof RSheet>;

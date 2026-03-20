@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RDivider from "./RDivider.vue";
 
 const meta = {
-  title: "Components/RDivider",
+  title: "Containment/RDivider",
   component: RDivider,
   tags: ["autodocs"],
 } satisfies Meta<typeof RDivider>;

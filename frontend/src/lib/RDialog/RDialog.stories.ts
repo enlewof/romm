@@ -3,7 +3,7 @@ import { RBtn, RBtnGroup } from "@/lib";
 import RDialog from "./RDialog.vue";
 
 const meta = {
-  title: "Components/RDialog",
+  title: "Containment/RDialog",
   component: RDialog,
   tags: ["autodocs"],
 } satisfies Meta<typeof RDialog>;

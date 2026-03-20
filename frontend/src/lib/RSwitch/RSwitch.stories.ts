@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RSwitch from "./RSwitch.vue";
 
 const meta = {
-  title: "Components/RSwitch",
+  title: "Forms/RSwitch",
   component: RSwitch,
   tags: ["autodocs"],
 } satisfies Meta<typeof RSwitch>;

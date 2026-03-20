@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RAvatar from "./RAvatar.vue";
 
 const meta = {
-  title: "Components/RAvatar",
+  title: "Data Display/RAvatar",
   component: RAvatar,
   tags: ["autodocs"],
 } satisfies Meta<typeof RAvatar>;

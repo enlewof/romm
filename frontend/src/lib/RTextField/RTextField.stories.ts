@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RTextField from "./RTextField.vue";
 
 const meta = {
-  title: "Components/RTextField",
+  title: "Forms/RTextField",
   component: RTextField,
   tags: ["autodocs"],
   argTypes: {

@@ -3,7 +3,7 @@ import { RBtn } from "../RBtn";
 import RSnackbar from "./RSnackbar.vue";
 
 const meta = {
-  title: "Components/RSnackbar",
+  title: "Feedback/RSnackbar",
   component: RSnackbar,
   tags: ["autodocs"],
 } satisfies Meta<typeof RSnackbar>;

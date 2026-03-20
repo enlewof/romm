@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RCard from "./RCard.vue";
 
 const meta = {
-  title: "Components/RCard",
+  title: "Containment/RCard",
   component: RCard,
   tags: ["autodocs"],
 } satisfies Meta<typeof RCard>;

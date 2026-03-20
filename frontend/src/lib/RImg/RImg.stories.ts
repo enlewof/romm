@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RImg from "./RImg.vue";
 
 const meta = {
-  title: "Components/RImg",
+  title: "Data Display/RImg",
   component: RImg,
   tags: ["autodocs"],
 } satisfies Meta<typeof RImg>;

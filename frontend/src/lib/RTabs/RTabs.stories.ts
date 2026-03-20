@@ -3,7 +3,7 @@ import { RTab } from "../RTab";
 import RTabs from "./RTabs.vue";
 
 const meta = {
-  title: "Components/RTabs",
+  title: "Navigation/RTabs",
   component: RTabs,
   tags: ["autodocs"],
   argTypes: {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RIsotipo from "./RIsotipo.vue";
 
 const meta = {
-  title: "Components/RIsotipo",
+  title: "Branding/RIsotipo",
   component: RIsotipo,
   tags: ["autodocs"],
 } satisfies Meta<typeof RIsotipo>;

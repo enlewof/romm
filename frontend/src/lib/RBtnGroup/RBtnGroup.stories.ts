@@ -3,7 +3,7 @@ import { RBtn } from "../RBtn";
 import RBtnGroup from "./RBtnGroup.vue";
 
 const meta = {
-  title: "Components/RBtnGroup",
+  title: "Actions/RBtnGroup",
   component: RBtnGroup,
   tags: ["autodocs"],
 } satisfies Meta<typeof RBtnGroup>;

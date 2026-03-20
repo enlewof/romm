@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RProgressLinear from "./RProgressLinear.vue";
 
 const meta = {
-  title: "Components/RProgressLinear",
+  title: "Feedback/RProgressLinear",
   component: RProgressLinear,
   tags: ["autodocs"],
 } satisfies Meta<typeof RProgressLinear>;

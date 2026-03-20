@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RSelect from "./RSelect.vue";
 
 const meta = {
-  title: "Components/RSelect",
+  title: "Forms/RSelect",
   component: RSelect,
   tags: ["autodocs"],
 } satisfies Meta<typeof RSelect>;

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import RBtn from "./RBtn.vue";
 
 const meta = {
-  title: "Components/RBtn",
+  title: "Actions/RBtn",
   component: RBtn,
   tags: ["autodocs"],
   argTypes: {
