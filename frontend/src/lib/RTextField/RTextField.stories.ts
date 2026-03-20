@@ -6,6 +6,10 @@ const meta = {
   component: RTextField,
   tags: ["autodocs"],
   argTypes: {
+    modelValue: { control: "text" },
+    label: { control: "text" },
+    placeholder: { control: "text" },
+    type: { control: "text" },
     variant: {
       control: "select",
       options: [
@@ -22,6 +26,28 @@ const meta = {
       control: "select",
       options: ["default", "comfortable", "compact"],
     },
+    prependIcon: { control: "text" },
+    appendIcon: { control: "text" },
+    prependInnerIcon: { control: "text" },
+    appendInnerIcon: { control: "text" },
+    clearable: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    hideDetails: {
+      control: "select",
+      options: [true, false, "auto"],
+    },
+    hint: { control: "text" },
+    persistentHint: { control: "boolean" },
+    color: { control: "text" },
+    name: { control: "text" },
+    autocomplete: { control: "text" },
+    autofocus: { control: "boolean" },
+    prefix: { control: "text" },
+    suffix: { control: "text" },
+    counter: { control: "number" },
+    loading: { control: "boolean" },
+    singleLine: { control: "boolean" },
   },
 } satisfies Meta<typeof RTextField>;
 
@@ -98,5 +124,27 @@ export const WithHint: Story = {
     components: { RTextField },
     template:
       '<RTextField label="Username" hint="Choose a unique username" persistent-hint />',
+  }),
+};
+
+export const Playground: Story = {
+  args: {
+    label: "Label",
+    type: "text",
+    variant: "underlined",
+    density: "default",
+    clearable: false,
+    disabled: false,
+    readonly: false,
+    hideDetails: false,
+    persistentHint: false,
+    autofocus: false,
+    loading: false,
+    singleLine: false,
+  },
+  render: (args) => ({
+    components: { RTextField },
+    setup: () => ({ args }),
+    template: '<RTextField v-bind="args" />',
   }),
 };

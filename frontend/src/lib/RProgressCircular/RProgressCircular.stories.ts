@@ -5,10 +5,32 @@ const meta = {
   title: "Feedback/RProgressCircular",
   component: RProgressCircular,
   tags: ["autodocs"],
+  argTypes: {
+    indeterminate: { control: "boolean" },
+    modelValue: { control: "number" },
+    size: { control: "number" },
+    width: { control: "number" },
+    color: { control: "text" },
+  },
 } satisfies Meta<typeof RProgressCircular>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    indeterminate: false,
+    modelValue: 60,
+    size: 48,
+    width: 4,
+    color: "primary",
+  },
+  render: (args) => ({
+    components: { RProgressCircular },
+    setup: () => ({ args }),
+    template: '<RProgressCircular v-bind="args" />',
+  }),
+};
 
 export const Indeterminate: Story = {
   render: () => ({

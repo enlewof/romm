@@ -5,10 +5,26 @@ const meta = {
   title: "Branding/RIsotipo",
   component: RIsotipo,
   tags: ["autodocs"],
+  argTypes: {
+    size: { control: "number" },
+    avatar: { control: "boolean" },
+  },
 } satisfies Meta<typeof RIsotipo>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    size: 40,
+    avatar: true,
+  },
+  render: (args) => ({
+    components: { RIsotipo },
+    setup: () => ({ args }),
+    template: '<RIsotipo v-bind="args" />',
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

@@ -6,10 +6,41 @@ const meta = {
   title: "Data Display/RTooltip",
   component: RTooltip,
   tags: ["autodocs"],
+  argTypes: {
+    text: { control: "text" },
+    location: {
+      control: "select",
+      options: ["top", "bottom", "start", "end"],
+    },
+    openDelay: { control: "number" },
+    disabled: { control: "boolean" },
+    openOnHover: { control: "boolean" },
+  },
 } satisfies Meta<typeof RTooltip>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    text: "Hello from tooltip",
+    location: "bottom",
+    openDelay: 500,
+    disabled: false,
+    openOnHover: true,
+  },
+  render: (args) => ({
+    components: { RTooltip, RBtn },
+    setup: () => ({ args }),
+    template: `
+      <RTooltip v-bind="args">
+        <template #activator="{ props }">
+          <RBtn v-bind="props">Hover me</RBtn>
+        </template>
+      </RTooltip>
+    `,
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

@@ -11,11 +11,34 @@ const meta = {
       control: "select",
       options: ["default", "comfortable", "compact"],
     },
+    nav: { control: "boolean" },
+    bgColor: { control: "text" },
+    lines: {
+      control: "select",
+      options: [false, "one", "two", "three"],
+    },
   },
 } satisfies Meta<typeof RList>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    nav: false,
+  },
+  render: (args) => ({
+    components: { RList, RListItem },
+    setup: () => ({ args }),
+    template: `
+      <RList v-bind="args" :width="300">
+        <RListItem title="Item one" />
+        <RListItem title="Item two" />
+        <RListItem title="Item three" />
+      </RList>
+    `,
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

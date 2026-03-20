@@ -7,6 +7,8 @@ const meta = {
   component: RTabs,
   tags: ["autodocs"],
   argTypes: {
+    color: { control: "text" },
+    grow: { control: "boolean" },
     density: {
       control: "select",
       options: ["default", "comfortable", "compact"],
@@ -15,6 +17,7 @@ const meta = {
       control: "select",
       options: ["start", "center", "end", "title"],
     },
+    bgColor: { control: "text" },
   },
 } satisfies Meta<typeof RTabs>;
 
@@ -26,6 +29,23 @@ export const Default: Story = {
     components: { RTabs, RTab },
     template: `
       <RTabs model-value="one">
+        <RTab value="one">Tab One</RTab>
+        <RTab value="two">Tab Two</RTab>
+        <RTab value="three">Tab Three</RTab>
+      </RTabs>
+    `,
+  }),
+};
+
+export const Playground: Story = {
+  args: {
+    grow: false,
+  },
+  render: (args) => ({
+    components: { RTabs, RTab },
+    setup: () => ({ args }),
+    template: `
+      <RTabs v-bind="args" model-value="one">
         <RTab value="one">Tab One</RTab>
         <RTab value="two">Tab Two</RTab>
         <RTab value="three">Tab Three</RTab>

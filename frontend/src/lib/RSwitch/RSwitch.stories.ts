@@ -5,6 +5,23 @@ const meta = {
   title: "Forms/RSwitch",
   component: RSwitch,
   tags: ["autodocs"],
+  argTypes: {
+    modelValue: { control: "boolean" },
+    label: { control: "text" },
+    color: { control: "text" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    inset: { control: "boolean" },
+    hideDetails: {
+      control: "select",
+      options: [true, false, "auto"],
+    },
+    density: {
+      control: "select",
+      options: ["default", "comfortable", "compact"],
+    },
+    loading: { control: "boolean" },
+  },
 } satisfies Meta<typeof RSwitch>;
 
 export default meta;
@@ -48,5 +65,23 @@ export const Colors: Story = {
         <RSwitch label="Green" color="romm-green" :model-value="true" />
       </div>
     `,
+  }),
+};
+
+export const Playground: Story = {
+  args: {
+    label: "Enable feature",
+    color: "primary",
+    disabled: false,
+    readonly: false,
+    inset: false,
+    hideDetails: false,
+    density: "default",
+    loading: false,
+  },
+  render: (args) => ({
+    components: { RSwitch },
+    setup: () => ({ args }),
+    template: '<RSwitch v-bind="args" />',
   }),
 };

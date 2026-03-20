@@ -5,10 +5,38 @@ const meta = {
   title: "Containment/RSection",
   component: RSection,
   tags: ["autodocs"],
+  argTypes: {
+    title: { control: "text" },
+    icon: { control: "text" },
+    titleDivider: { control: "boolean" },
+    iconColor: { control: "text" },
+    bgColor: { control: "text" },
+  },
 } satisfies Meta<typeof RSection>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    title: "Platform Stats",
+    icon: "mdi-chart-bar",
+    titleDivider: false,
+    iconColor: "",
+    bgColor: "bg-background",
+  },
+  render: (args) => ({
+    components: { RSection },
+    setup: () => ({ args }),
+    template: `
+      <RSection v-bind="args">
+        <template #content>
+          <div class="pa-4">Section content goes here</div>
+        </template>
+      </RSection>
+    `,
+  }),
+};
 
 export const Default: Story = {
   args: { title: "Platform Stats", icon: "mdi-chart-bar" },

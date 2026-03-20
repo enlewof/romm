@@ -6,10 +6,45 @@ const meta = {
   title: "Data Display/RListItem",
   component: RListItem,
   tags: ["autodocs"],
+  argTypes: {
+    title: { control: "text" },
+    subtitle: { control: "text" },
+    prependIcon: { control: "text" },
+    appendIcon: { control: "text" },
+    active: { control: "boolean" },
+    activeColor: { control: "text" },
+    rounded: { control: "text" },
+    to: { control: "text" },
+    href: { control: "text" },
+    density: {
+      control: "select",
+      options: ["default", "comfortable", "compact"],
+    },
+    lines: {
+      control: "select",
+      options: [false, "one", "two", "three"],
+    },
+  },
 } satisfies Meta<typeof RListItem>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    title: "List item",
+    active: false,
+  },
+  render: (args) => ({
+    components: { RListItem, RList },
+    setup: () => ({ args }),
+    template: `
+      <RList :width="300">
+        <RListItem v-bind="args" />
+      </RList>
+    `,
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

@@ -5,10 +5,32 @@ const meta = {
   title: "Data Display/RAvatar",
   component: RAvatar,
   tags: ["autodocs"],
+  argTypes: {
+    size: { control: "number" },
+    rounded: { control: "text" },
+    color: { control: "text" },
+    variant: {
+      control: "select",
+      options: ["flat", "text", "outlined", "elevated", "tonal", "plain"],
+    },
+    image: { control: "text" },
+  },
 } satisfies Meta<typeof RAvatar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    size: 40,
+    color: "primary",
+  },
+  render: (args) => ({
+    components: { RAvatar },
+    setup: () => ({ args }),
+    template: '<RAvatar v-bind="args">AB</RAvatar>',
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

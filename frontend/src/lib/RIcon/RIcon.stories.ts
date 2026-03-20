@@ -6,15 +6,33 @@ const meta = {
   component: RIcon,
   tags: ["autodocs"],
   argTypes: {
+    icon: { control: "text" },
     size: {
       control: "select",
       options: ["x-small", "small", "default", "large", "x-large"],
     },
+    color: { control: "text" },
+    start: { control: "boolean" },
+    end: { control: "boolean" },
   },
 } satisfies Meta<typeof RIcon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    icon: "mdi-heart",
+    size: "default",
+    start: false,
+    end: false,
+  },
+  render: (args) => ({
+    components: { RIcon },
+    setup: () => ({ args }),
+    template: '<RIcon v-bind="args" />',
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

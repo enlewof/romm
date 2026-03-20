@@ -5,10 +5,34 @@ const meta = {
   title: "Containment/RDivider",
   component: RDivider,
   tags: ["autodocs"],
+  argTypes: {
+    vertical: { control: "boolean" },
+    thickness: { control: "number" },
+    color: { control: "text" },
+    inset: { control: "boolean" },
+  },
 } satisfies Meta<typeof RDivider>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    vertical: false,
+    inset: false,
+  },
+  render: (args) => ({
+    components: { RDivider },
+    setup: () => ({ args }),
+    template: `
+      <div :style="args.vertical ? 'display: flex; height: 40px; align-items: center; gap: 12px;' : ''">
+        <span>Content A</span>
+        <RDivider v-bind="args" />
+        <span>Content B</span>
+      </div>
+    `,
+  }),
+};
 
 export const Horizontal: Story = {
   render: () => ({

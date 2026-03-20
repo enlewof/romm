@@ -5,10 +5,42 @@ const meta = {
   title: "Data Display/RBadge",
   component: RBadge,
   tags: ["autodocs"],
+  argTypes: {
+    modelValue: { control: "boolean" },
+    content: { control: "text" },
+    color: { control: "text" },
+    dot: { control: "boolean" },
+    icon: { control: "text" },
+    location: {
+      control: "select",
+      options: ["top start", "top end", "bottom start", "bottom end"],
+    },
+    max: { control: "number" },
+    offsetX: { control: "number" },
+    offsetY: { control: "number" },
+  },
 } satisfies Meta<typeof RBadge>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    modelValue: true,
+    content: "5",
+    color: "primary",
+    dot: false,
+  },
+  render: (args) => ({
+    components: { RBadge },
+    setup: () => ({ args }),
+    template: `
+      <RBadge v-bind="args">
+        <v-icon icon="mdi-bell" size="32" />
+      </RBadge>
+    `,
+  }),
+};
 
 export const WithContent: Story = {
   render: () => ({

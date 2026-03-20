@@ -5,6 +5,42 @@ const meta = {
   title: "Forms/RTextarea",
   component: RTextarea,
   tags: ["autodocs"],
+  argTypes: {
+    modelValue: { control: "text" },
+    label: { control: "text" },
+    placeholder: { control: "text" },
+    variant: {
+      control: "select",
+      options: [
+        "outlined",
+        "filled",
+        "underlined",
+        "solo",
+        "solo-filled",
+        "solo-inverted",
+        "plain",
+      ],
+    },
+    density: {
+      control: "select",
+      options: ["default", "comfortable", "compact"],
+    },
+    rows: { control: "number" },
+    autoGrow: { control: "boolean" },
+    noResize: { control: "boolean" },
+    clearable: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    hideDetails: {
+      control: "select",
+      options: [true, false, "auto"],
+    },
+    hint: { control: "text" },
+    persistentHint: { control: "boolean" },
+    color: { control: "text" },
+    counter: { control: "number" },
+    maxRows: { control: "number" },
+  },
 } satisfies Meta<typeof RTextarea>;
 
 export default meta;
@@ -36,5 +72,26 @@ export const Readonly: Story = {
     components: { RTextarea },
     template:
       '<RTextarea label="Raw metadata" model-value="{ metadata: true }" readonly />',
+  }),
+};
+
+export const Playground: Story = {
+  args: {
+    label: "Description",
+    variant: "underlined",
+    density: "default",
+    rows: 5,
+    autoGrow: false,
+    noResize: false,
+    clearable: false,
+    disabled: false,
+    readonly: false,
+    hideDetails: false,
+    persistentHint: false,
+  },
+  render: (args) => ({
+    components: { RTextarea },
+    setup: () => ({ args }),
+    template: '<RTextarea v-bind="args" />',
   }),
 };

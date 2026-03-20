@@ -14,11 +14,40 @@ const meta = {
       control: "select",
       options: ["flat", "text", "outlined", "elevated", "tonal", "plain"],
     },
+    density: {
+      control: "select",
+      options: ["default", "comfortable", "compact"],
+    },
+    color: { control: "text" },
+    icon: { control: "text" },
+    closable: { control: "boolean" },
+    title: { control: "text" },
+    prominent: { control: "boolean" },
+    border: {
+      control: "select",
+      options: [false, true, "top", "bottom", "start", "end"],
+    },
   },
 } satisfies Meta<typeof RAlert>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    type: "info",
+    variant: "tonal",
+    density: "default",
+    closable: false,
+    prominent: false,
+    border: false,
+  },
+  render: (args) => ({
+    components: { RAlert },
+    setup: () => ({ args }),
+    template: '<RAlert v-bind="args">This is an alert message.</RAlert>',
+  }),
+};
 
 export const Info: Story = {
   render: () => ({

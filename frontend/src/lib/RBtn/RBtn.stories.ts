@@ -18,11 +18,41 @@ const meta = {
       control: "select",
       options: ["default", "comfortable", "compact"],
     },
+    icon: { control: "text" },
+    prependIcon: { control: "text" },
+    appendIcon: { control: "text" },
+    disabled: { control: "boolean" },
+    loading: { control: "boolean" },
+    block: { control: "boolean" },
+    color: { control: "text" },
+    rounded: { control: "text" },
+    type: {
+      control: "select",
+      options: ["button", "submit", "reset"],
+    },
+    to: { control: "text" },
+    href: { control: "text" },
   },
 } satisfies Meta<typeof RBtn>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    variant: "flat",
+    size: "default",
+    density: "default",
+    disabled: false,
+    loading: false,
+    block: false,
+  },
+  render: (args) => ({
+    components: { RBtn },
+    setup: () => ({ args }),
+    template: '<RBtn v-bind="args">Button</RBtn>',
+  }),
+};
 
 export const Flat: Story = {
   render: () => ({

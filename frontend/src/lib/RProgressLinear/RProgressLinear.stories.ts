@@ -5,10 +5,34 @@ const meta = {
   title: "Feedback/RProgressLinear",
   component: RProgressLinear,
   tags: ["autodocs"],
+  argTypes: {
+    indeterminate: { control: "boolean" },
+    modelValue: { control: "number" },
+    color: { control: "text" },
+    height: { control: "number" },
+    striped: { control: "boolean" },
+    rounded: { control: "text" },
+    bgColor: { control: "text" },
+  },
 } satisfies Meta<typeof RProgressLinear>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    indeterminate: false,
+    modelValue: 60,
+    color: "primary",
+    height: 4,
+    striped: false,
+  },
+  render: (args) => ({
+    components: { RProgressLinear },
+    setup: () => ({ args }),
+    template: '<RProgressLinear v-bind="args" />',
+  }),
+};
 
 export const Indeterminate: Story = {
   render: () => ({

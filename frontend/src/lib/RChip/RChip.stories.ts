@@ -14,11 +14,32 @@ const meta = {
       control: "select",
       options: ["x-small", "small", "default", "large", "x-large"],
     },
+    color: { control: "text" },
+    label: { control: "boolean" },
+    closable: { control: "boolean" },
+    prependIcon: { control: "text" },
+    appendIcon: { control: "text" },
+    disabled: { control: "boolean" },
   },
 } satisfies Meta<typeof RChip>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    variant: "tonal",
+    size: "default",
+    label: false,
+    closable: false,
+    disabled: false,
+  },
+  render: (args) => ({
+    components: { RChip },
+    setup: () => ({ args }),
+    template: '<RChip v-bind="args">Chip</RChip>',
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

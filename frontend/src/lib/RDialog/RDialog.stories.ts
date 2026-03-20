@@ -6,10 +6,57 @@ const meta = {
   title: "Containment/RDialog",
   component: RDialog,
   tags: ["autodocs"],
+  argTypes: {
+    modelValue: { control: "boolean" },
+    loadingCondition: { control: "boolean" },
+    emptyStateCondition: { control: "boolean" },
+    emptyStateType: {
+      control: "select",
+      options: [null, "game", "platform", "firmware"],
+    },
+    expandContentOnEmptyState: { control: "boolean" },
+    scrollContent: { control: "boolean" },
+    showRommIcon: { control: "boolean" },
+    icon: { control: "text" },
+    width: { control: "text" },
+    height: { control: "text" },
+  },
 } satisfies Meta<typeof RDialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    modelValue: true,
+    loadingCondition: false,
+    emptyStateCondition: false,
+    scrollContent: false,
+    showRommIcon: false,
+    icon: "mdi-information",
+    width: "400",
+  },
+  render: (args) => ({
+    components: { RDialog, RBtn, RBtnGroup },
+    setup: () => ({ args }),
+    template: `
+      <RDialog v-bind="args">
+        <template #header>
+          <span>Dialog Title</span>
+        </template>
+        <template #content>
+          <div class="pa-4">This is the dialog content.</div>
+        </template>
+        <template #footer>
+          <RBtnGroup>
+            <RBtn variant="flat" class="bg-toplayer">Cancel</RBtn>
+            <RBtn variant="flat" color="primary">Confirm</RBtn>
+          </RBtnGroup>
+        </template>
+      </RDialog>
+    `,
+  }),
+};
 
 export const Default: Story = {
   args: { modelValue: true },

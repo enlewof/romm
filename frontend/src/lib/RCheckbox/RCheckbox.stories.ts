@@ -5,6 +5,24 @@ const meta = {
   title: "Forms/RCheckbox",
   component: RCheckbox,
   tags: ["autodocs"],
+  argTypes: {
+    modelValue: { control: "boolean" },
+    label: { control: "text" },
+    color: { control: "text" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    indeterminate: { control: "boolean" },
+    hideDetails: {
+      control: "select",
+      options: [true, false, "auto"],
+    },
+    density: {
+      control: "select",
+      options: ["default", "comfortable", "compact"],
+    },
+    trueIcon: { control: "text" },
+    falseIcon: { control: "text" },
+  },
 } satisfies Meta<typeof RCheckbox>;
 
 export default meta;
@@ -48,5 +66,22 @@ export const Indeterminate: Story = {
   render: () => ({
     components: { RCheckbox },
     template: '<RCheckbox label="Select all" indeterminate />',
+  }),
+};
+
+export const Playground: Story = {
+  args: {
+    label: "Accept terms",
+    color: "primary",
+    disabled: false,
+    readonly: false,
+    indeterminate: false,
+    hideDetails: false,
+    density: "default",
+  },
+  render: (args) => ({
+    components: { RCheckbox },
+    setup: () => ({ args }),
+    template: '<RCheckbox v-bind="args" />',
   }),
 };

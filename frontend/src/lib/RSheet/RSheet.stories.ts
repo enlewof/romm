@@ -5,10 +5,29 @@ const meta = {
   title: "Containment/RSheet",
   component: RSheet,
   tags: ["autodocs"],
+  argTypes: {
+    elevation: { control: "number" },
+    color: { control: "text" },
+    rounded: { control: "text" },
+    width: { control: "text" },
+    height: { control: "text" },
+  },
 } satisfies Meta<typeof RSheet>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    width: "300",
+    height: "150",
+  },
+  render: (args) => ({
+    components: { RSheet },
+    setup: () => ({ args }),
+    template: '<RSheet v-bind="args" class="pa-4">Sheet content</RSheet>',
+  }),
+};
 
 export const Default: Story = {
   render: () => ({

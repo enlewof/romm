@@ -6,10 +6,40 @@ const meta = {
   title: "Actions/RBtnGroup",
   component: RBtnGroup,
   tags: ["autodocs"],
+  argTypes: {
+    divided: { control: "boolean" },
+    density: {
+      control: "select",
+      options: ["default", "comfortable", "compact"],
+    },
+    variant: {
+      control: "select",
+      options: ["flat", "text", "elevated", "tonal", "outlined", "plain"],
+    },
+    color: { control: "text" },
+    rounded: { control: "text" },
+  },
 } satisfies Meta<typeof RBtnGroup>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Playground: Story = {
+  args: {
+    divided: true,
+    density: "compact",
+  },
+  render: (args) => ({
+    components: { RBtnGroup, RBtn },
+    setup: () => ({ args }),
+    template: `
+      <RBtnGroup v-bind="args">
+        <RBtn>Cancel</RBtn>
+        <RBtn color="primary">Confirm</RBtn>
+      </RBtnGroup>
+    `,
+  }),
+};
 
 export const Default: Story = {
   render: () => ({
