@@ -1,10 +1,6 @@
 from alembic import op
 from sqlalchemy import inspect
 
-# ---------------------------------------------------------------------------
-# Table helpers
-# ---------------------------------------------------------------------------
-
 
 def create_table_if_not_exists(table_name, *args, **kwargs):
     """Wrap op.create_table with an existence check.
@@ -25,11 +21,6 @@ def drop_table_if_exists(table_name):
     bind = op.get_bind()
     if inspect(bind).has_table(table_name):
         op.drop_table(table_name)
-
-
-# ---------------------------------------------------------------------------
-# Column helpers
-# ---------------------------------------------------------------------------
 
 
 def _get_column_names(table_name):
