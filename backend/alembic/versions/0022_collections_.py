@@ -87,6 +87,7 @@ def upgrade() -> None:
         )
 
     create_table_if_not_exists(
+        op,
         "collections",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("name", sa.String(length=400), nullable=False),
@@ -131,5 +132,5 @@ def downgrade() -> None:
             nullable=False,
         )
 
-    drop_table_if_exists("collections")
+    drop_table_if_exists(op, "collections")
     # ### end Alembic commands ###

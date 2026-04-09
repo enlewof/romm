@@ -21,18 +21,19 @@ depends_on = None
 
 def upgrade() -> None:
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        drop_column_if_exists("rom_user", "ra_metadata")
+        drop_column_if_exists(op, "rom_user", "ra_metadata")
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "platforms", sa.Column("launchbox_id", sa.Integer(), nullable=True)
+            op, "platforms", sa.Column("launchbox_id", sa.Integer(), nullable=True)
         )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("launchbox_id", sa.Integer(), nullable=True)
+            op, "roms", sa.Column("launchbox_id", sa.Integer(), nullable=True)
         )
         add_column_if_not_exists(
+            op,
             "roms",
             sa.Column(
                 "launchbox_metadata",
@@ -52,13 +53,13 @@ def downgrade() -> None:
         batch_op.drop_index("idx_roms_sgdb_id")
         batch_op.drop_index("idx_roms_ra_id")
         batch_op.drop_index("idx_roms_launchbox_id")
-        drop_column_if_exists("roms", "launchbox_metadata")
-        drop_column_if_exists("roms", "launchbox_id")
+        drop_column_if_exists(op, "roms", "launchbox_metadata")
+        drop_column_if_exists(op, "roms", "launchbox_id")
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        drop_column_if_exists("platforms", "launchbox_id")
+        drop_column_if_exists(op, "platforms", "launchbox_id")
 
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
         add_column_if_not_exists(
-            "rom_user", sa.Column("ra_metadata", CustomJSON(), nullable=True)
+            op, "rom_user", sa.Column("ra_metadata", CustomJSON(), nullable=True)
         )

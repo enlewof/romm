@@ -24,6 +24,7 @@ def upgrade() -> None:
 
     # Create the smart collections table
     create_table_if_not_exists(
+        op,
         "smart_collections",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("name", sa.String(length=400), nullable=False),
@@ -60,4 +61,4 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Drop smart collections table."""
 
-    drop_table_if_exists("smart_collections")
+    drop_table_if_exists(op, "smart_collections")

@@ -22,12 +22,13 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("hasheous_id", sa.Integer(), nullable=True)
+            op, "roms", sa.Column("hasheous_id", sa.Integer(), nullable=True)
         )
         add_column_if_not_exists(
-            "roms", sa.Column("tgdb_id", sa.Integer(), nullable=True)
+            op, "roms", sa.Column("tgdb_id", sa.Integer(), nullable=True)
         )
         add_column_if_not_exists(
+            op,
             "roms",
             sa.Column(
                 "hasheous_metadata",
@@ -42,21 +43,21 @@ def upgrade() -> None:
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "platforms", sa.Column("hasheous_id", sa.Integer(), nullable=True)
+            op, "platforms", sa.Column("hasheous_id", sa.Integer(), nullable=True)
         )
         add_column_if_not_exists(
-            "platforms", sa.Column("tgdb_id", sa.Integer(), nullable=True)
+            op, "platforms", sa.Column("tgdb_id", sa.Integer(), nullable=True)
         )
 
 
 def downgrade() -> None:
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        drop_column_if_exists("platforms", "hasheous_id")
-        drop_column_if_exists("platforms", "tgdb_id")
+        drop_column_if_exists(op, "platforms", "hasheous_id")
+        drop_column_if_exists(op, "platforms", "tgdb_id")
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         batch_op.drop_index("idx_roms_tgdb_id")
         batch_op.drop_index("idx_roms_hasheous_id")
-        drop_column_if_exists("roms", "hasheous_metadata")
-        drop_column_if_exists("roms", "tgdb_id")
-        drop_column_if_exists("roms", "hasheous_id")
+        drop_column_if_exists(op, "roms", "hasheous_metadata")
+        drop_column_if_exists(op, "roms", "tgdb_id")
+        drop_column_if_exists(op, "roms", "hasheous_id")

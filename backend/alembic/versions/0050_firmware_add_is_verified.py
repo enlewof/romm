@@ -23,7 +23,7 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("firmware", schema=None) as batch_op:
         add_column_if_not_exists(
-            "firmware", sa.Column("is_verified", sa.Boolean(), nullable=True)
+            op, "firmware", sa.Column("is_verified", sa.Boolean(), nullable=True)
         )
 
     # Get all firmware records with their hash information
@@ -84,4 +84,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     with op.batch_alter_table("firmware", schema=None) as batch_op:
-        drop_column_if_exists("firmware", "is_verified")
+        drop_column_if_exists(op, "firmware", "is_verified")

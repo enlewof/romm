@@ -21,7 +21,7 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("fs_size_bytes", sa.BigInteger(), nullable=True)
+            op, "roms", sa.Column("fs_size_bytes", sa.BigInteger(), nullable=True)
         )
 
     # Set fs_size_bytes for all roms
@@ -39,4 +39,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        drop_column_if_exists("roms", "fs_size_bytes")
+        drop_column_if_exists(op, "roms", "fs_size_bytes")

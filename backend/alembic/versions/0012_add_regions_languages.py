@@ -24,10 +24,10 @@ def upgrade() -> None:
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("regions", CustomJSON(), nullable=True)
+            op, "roms", sa.Column("regions", CustomJSON(), nullable=True)
         )
         add_column_if_not_exists(
-            "roms", sa.Column("languages", CustomJSON(), nullable=True)
+            op, "roms", sa.Column("languages", CustomJSON(), nullable=True)
         )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
@@ -38,7 +38,7 @@ def upgrade() -> None:
         else:
             batch_op.execute("UPDATE roms SET languages = JSON_ARRAY()")
             batch_op.execute("UPDATE roms SET regions = JSON_ARRAY(region)")
-        drop_column_if_exists("roms", "region")
+        drop_column_if_exists(op, "roms", "region")
 
 
 def downgrade() -> None:
@@ -46,7 +46,7 @@ def downgrade() -> None:
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("region", sa.VARCHAR(length=20), nullable=True)
+            op, "roms", sa.Column("region", sa.VARCHAR(length=20), nullable=True)
         )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
@@ -54,5 +54,5 @@ def downgrade() -> None:
             batch_op.execute("UPDATE roms SET region = regions->>0")
         else:
             batch_op.execute("UPDATE roms SET region = JSON_EXTRACT(regions, '$[0]')")
-        drop_column_if_exists("roms", "languages")
-        drop_column_if_exists("roms", "regions")
+        drop_column_if_exists(op, "roms", "languages")
+        drop_column_if_exists(op, "roms", "regions")

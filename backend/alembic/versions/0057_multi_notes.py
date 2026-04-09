@@ -28,6 +28,7 @@ def upgrade() -> None:
 
     # Create the new rom_notes table
     create_table_if_not_exists(
+        op,
         "rom_notes",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("title", sa.String(length=400), nullable=False),
@@ -113,10 +114,12 @@ def downgrade() -> None:
 
     # Add back the old columns to rom_user
     add_column_if_not_exists(
+        op,
         "rom_user",
         sa.Column("note_raw_markdown", sa.Text(), nullable=False, server_default=""),
     )
     add_column_if_not_exists(
+        op,
         "rom_user",
         sa.Column(
             "note_is_public", sa.Boolean(), nullable=False, server_default=text("false")
@@ -152,4 +155,4 @@ def downgrade() -> None:
     op.drop_index("idx_rom_notes_rom_user", table_name="rom_notes")
     op.drop_index("idx_rom_notes_public", table_name="rom_notes")
 
-    drop_table_if_exists("rom_notes")
+    drop_table_if_exists(op, "rom_notes")

@@ -21,9 +21,10 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("gamelist_id", sa.String(length=100), nullable=True)
+            op, "roms", sa.Column("gamelist_id", sa.String(length=100), nullable=True)
         )
         add_column_if_not_exists(
+            op,
             "roms",
             sa.Column(
                 "gamelist_metadata",
@@ -39,5 +40,5 @@ def upgrade() -> None:
 def downgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
         batch_op.drop_index("idx_roms_gamelist_id")
-        drop_column_if_exists("roms", "gamelist_metadata")
-        drop_column_if_exists("roms", "gamelist_id")
+        drop_column_if_exists(op, "roms", "gamelist_metadata")
+        drop_column_if_exists(op, "roms", "gamelist_id")

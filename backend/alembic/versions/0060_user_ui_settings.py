@@ -23,6 +23,7 @@ def upgrade() -> None:
     """Add ui_settings column to users table."""
     with op.batch_alter_table("users", schema=None) as batch_op:
         add_column_if_not_exists(
+            op,
             "users",
             sa.Column(
                 "ui_settings",
@@ -37,4 +38,4 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Remove ui_settings column from users table."""
     with op.batch_alter_table("users", schema=None) as batch_op:
-        drop_column_if_exists("users", "ui_settings")
+        drop_column_if_exists(op, "users", "ui_settings")

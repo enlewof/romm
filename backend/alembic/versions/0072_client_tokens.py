@@ -20,6 +20,7 @@ depends_on = None
 
 def upgrade() -> None:
     create_table_if_not_exists(
+        op,
         "client_tokens",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
@@ -59,4 +60,4 @@ def downgrade() -> None:
     with op.batch_alter_table("client_tokens") as batch_op:
         batch_op.drop_index(batch_op.f("ix_client_tokens_user_id"))
         batch_op.drop_index(batch_op.f("ix_client_tokens_hashed_token"))
-    drop_table_if_exists("client_tokens")
+    drop_table_if_exists(op, "client_tokens")

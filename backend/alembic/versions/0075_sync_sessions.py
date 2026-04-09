@@ -48,6 +48,7 @@ def upgrade() -> None:
         )
 
     create_table_if_not_exists(
+        op,
         "sync_sessions",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("device_id", sa.String(length=255), nullable=False),
@@ -100,16 +101,16 @@ def upgrade() -> None:
     op.create_index("ix_sync_sessions_status", "sync_sessions", ["status"])
 
     add_column_if_not_exists(
-        "devices", sa.Column("sync_config", sa.JSON(), nullable=True)
+        op, "devices", sa.Column("sync_config", sa.JSON(), nullable=True)
     )
 
 
 def downgrade() -> None:
-    drop_column_if_exists("devices", "sync_config")
+    drop_column_if_exists(op, "devices", "sync_config")
 
     op.drop_index("ix_sync_sessions_status", table_name="sync_sessions")
 
-    drop_table_if_exists("sync_sessions")
+    drop_table_if_exists(op, "sync_sessions")
 
     connection = op.get_bind()
     if is_postgresql(connection):

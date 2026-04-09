@@ -21,22 +21,28 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("platforms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "platforms", sa.Column("flashpoint_id", sa.Integer(), nullable=True)
+            op, "platforms", sa.Column("flashpoint_id", sa.Integer(), nullable=True)
         )
         add_column_if_not_exists(
-            "platforms", sa.Column("igdb_slug", sa.String(length=100), nullable=True)
+            op,
+            "platforms",
+            sa.Column("igdb_slug", sa.String(length=100), nullable=True),
         )
         add_column_if_not_exists(
-            "platforms", sa.Column("moby_slug", sa.String(length=100), nullable=True)
+            op,
+            "platforms",
+            sa.Column("moby_slug", sa.String(length=100), nullable=True),
         )
         add_column_if_not_exists(
-            "platforms", sa.Column("hltb_slug", sa.String(length=100), nullable=True)
+            op,
+            "platforms",
+            sa.Column("hltb_slug", sa.String(length=100), nullable=True),
         )
 
 
 def downgrade() -> None:
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        drop_column_if_exists("platforms", "hltb_slug")
-        drop_column_if_exists("platforms", "moby_slug")
-        drop_column_if_exists("platforms", "igdb_slug")
-        drop_column_if_exists("platforms", "flashpoint_id")
+        drop_column_if_exists(op, "platforms", "hltb_slug")
+        drop_column_if_exists(op, "platforms", "moby_slug")
+        drop_column_if_exists(op, "platforms", "igdb_slug")
+        drop_column_if_exists(op, "platforms", "flashpoint_id")

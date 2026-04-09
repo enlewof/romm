@@ -60,6 +60,7 @@ def upgrade() -> None:
         )
 
     create_table_if_not_exists(
+        op,
         "rom_files",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("rom_id", sa.Integer(), nullable=False),
@@ -169,9 +170,9 @@ def upgrade() -> None:
         batch_op.alter_column(
             "file_path", new_column_name="fs_path", existing_type=sa.String(length=1000)
         )
-        drop_column_if_exists("roms", "files")
-        drop_column_if_exists("roms", "multi")
-        drop_column_if_exists("roms", "file_size_bytes")
+        drop_column_if_exists(op, "roms", "files")
+        drop_column_if_exists(op, "roms", "multi")
+        drop_column_if_exists(op, "roms", "file_size_bytes")
 
 
 def downgrade() -> None:
@@ -179,13 +180,16 @@ def downgrade() -> None:
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            "roms", sa.Column("multi", sa.Boolean(), nullable=False, server_default="0")
+            op,
+            "roms",
+            sa.Column("multi", sa.Boolean(), nullable=False, server_default="0"),
         )
         batch_op.alter_column("multi", server_default=None)
         add_column_if_not_exists(
-            "roms", sa.Column("files", CustomJSON(), nullable=True)
+            op, "roms", sa.Column("files", CustomJSON(), nullable=True)
         )
         add_column_if_not_exists(
+            op,
             "roms",
             sa.Column(
                 "file_size_bytes", sa.BigInteger(), nullable=False, server_default="0"
@@ -264,7 +268,7 @@ def downgrade() -> None:
                 roms.file_size_bytes = aggregated_data.total_size;
             """)
 
-    drop_table_if_exists("rom_files")
+    drop_table_if_exists(op, "rom_files")
 
     if is_postgresql(connection):
         ENUM(name="romfilecategory").drop(connection, checkfirst=False)

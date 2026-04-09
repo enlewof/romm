@@ -26,6 +26,7 @@ depends_on = None
 
 def upgrade() -> None:
     create_table_if_not_exists(
+        op,
         "collections_roms",
         sa.Column("collection_id", sa.Integer(), nullable=False),
         sa.Column("rom_id", sa.Integer(), nullable=False),
@@ -257,13 +258,13 @@ def upgrade() -> None:
                 """),
         )
 
-    drop_column_if_exists("collections", "roms")
+    drop_column_if_exists(op, "collections", "roms")
 
 
 def downgrade() -> None:
     with op.batch_alter_table("collections", schema=None) as batch_op:
         add_column_if_not_exists(
-            "collections", sa.Column("roms", CustomJSON(), nullable=True)
+            op, "collections", sa.Column("roms", CustomJSON(), nullable=True)
         )
 
     connection = op.get_bind()
@@ -293,7 +294,7 @@ def downgrade() -> None:
     with op.batch_alter_table("collections", schema=None) as batch_op:
         batch_op.alter_column("roms", existing_type=CustomJSON(), nullable=False)
 
-    drop_table_if_exists("collections_roms")
+    drop_table_if_exists(op, "collections_roms")
 
     connection.execute(
         sa.text("""

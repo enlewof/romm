@@ -24,6 +24,7 @@ depends_on = None
 
 def upgrade():
     create_table_if_not_exists(
+        op,
         "devices",
         sa.Column("id", sa.String(255), primary_key=True),
         sa.Column("user_id", sa.Integer(), nullable=False),
@@ -58,6 +59,7 @@ def upgrade():
     )
 
     create_table_if_not_exists(
+        op,
         "device_save_sync",
         sa.Column("device_id", sa.String(255), nullable=False),
         sa.Column("save_id", sa.Integer(), nullable=False),
@@ -82,10 +84,10 @@ def upgrade():
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
         add_column_if_not_exists(
-            "saves", sa.Column("slot", sa.String(255), nullable=True)
+            op, "saves", sa.Column("slot", sa.String(255), nullable=True)
         )
         add_column_if_not_exists(
-            "saves", sa.Column("content_hash", sa.String(32), nullable=True)
+            op, "saves", sa.Column("content_hash", sa.String(32), nullable=True)
         )
 
     op.create_index("ix_devices_user_id", "devices", ["user_id"])
@@ -105,9 +107,9 @@ def downgrade():
     op.drop_index("ix_devices_user_id", "devices")
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
-        drop_column_if_exists("saves", "content_hash")
-        drop_column_if_exists("saves", "slot")
+        drop_column_if_exists(op, "saves", "content_hash")
+        drop_column_if_exists(op, "saves", "slot")
 
-    drop_table_if_exists("device_save_sync")
-    drop_table_if_exists("devices")
+    drop_table_if_exists(op, "device_save_sync")
+    drop_table_if_exists(op, "devices")
     op.execute("DROP TYPE IF EXISTS syncmode")
