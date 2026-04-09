@@ -11,6 +11,7 @@ from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
 
 from utils.database import is_postgresql
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
 
 revision = "0075_sync_sessions"
 down_revision = "0074_fix_empty_json_arrays"
@@ -41,7 +42,7 @@ def upgrade() -> None:
             name="syncsessionstatus",
         )
 
-    op.create_table(
+    create_table_if_not_exists(
         "sync_sessions",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("device_id", sa.String(length=255), nullable=False),
@@ -101,7 +102,7 @@ def downgrade() -> None:
 
     op.drop_index("ix_sync_sessions_status", table_name="sync_sessions")
 
-    op.drop_table("sync_sessions")
+    drop_table_if_exists("sync_sessions")
 
     connection = op.get_bind()
     if is_postgresql(connection):

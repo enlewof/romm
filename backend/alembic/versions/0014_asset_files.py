@@ -16,6 +16,7 @@ from sqlalchemy.orm import sessionmaker
 from config import ROMM_DB_DRIVER
 from config.config_manager import SQLITE_DB_BASE_PATH, ConfigManager
 from utils.database import CustomJSON, is_postgresql
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0014_asset_files"
@@ -87,7 +88,7 @@ def upgrade() -> None:
 
     connection = op.get_bind()
 
-    op.create_table(
+    create_table_if_not_exists(
         "saves",
         sa.Column("emulator", sa.String(length=50), nullable=True),
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -109,7 +110,7 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_table(
+    create_table_if_not_exists(
         "screenshots",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column(
@@ -130,7 +131,7 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_table(
+    create_table_if_not_exists(
         "states",
         sa.Column("emulator", sa.String(length=50), nullable=True),
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -334,6 +335,6 @@ def downgrade() -> None:
             ondelete="CASCADE",
         )
 
-    op.drop_table("states")
-    op.drop_table("screenshots")
-    op.drop_table("saves")
+    drop_table_if_exists("states")
+    drop_table_if_exists("screenshots")
+    drop_table_if_exists("saves")

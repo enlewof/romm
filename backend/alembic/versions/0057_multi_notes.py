@@ -10,6 +10,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import text
 
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+
 # revision identifiers, used by Alembic.
 revision = "0057_multi_notes"
 down_revision = "0056_gamelist_xml"
@@ -21,7 +23,7 @@ def upgrade() -> None:
     """Create the rom_notes table and migrate existing notes."""
 
     # Create the new rom_notes table
-    op.create_table(
+    create_table_if_not_exists(
         "rom_notes",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("title", sa.String(length=400), nullable=False),
@@ -146,4 +148,4 @@ def downgrade() -> None:
     op.drop_index("idx_rom_notes_rom_user", table_name="rom_notes")
     op.drop_index("idx_rom_notes_public", table_name="rom_notes")
 
-    op.drop_table("rom_notes")
+    drop_table_if_exists("rom_notes")

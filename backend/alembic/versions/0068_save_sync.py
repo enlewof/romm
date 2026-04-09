@@ -9,6 +9,8 @@ Create Date: 2026-01-17
 import sqlalchemy as sa
 from alembic import op
 
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+
 revision = "0068_save_sync"
 down_revision = "0067_romfile_category_enum_cheat"
 branch_labels = None
@@ -16,7 +18,7 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table(
+    create_table_if_not_exists(
         "devices",
         sa.Column("id", sa.String(255), primary_key=True),
         sa.Column("user_id", sa.Integer(), nullable=False),
@@ -50,7 +52,7 @@ def upgrade():
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
     )
 
-    op.create_table(
+    create_table_if_not_exists(
         "device_save_sync",
         sa.Column("device_id", sa.String(255), nullable=False),
         sa.Column("save_id", sa.Integer(), nullable=False),
@@ -97,6 +99,6 @@ def downgrade():
         batch_op.drop_column("content_hash")
         batch_op.drop_column("slot")
 
-    op.drop_table("device_save_sync")
-    op.drop_table("devices")
+    drop_table_if_exists("device_save_sync")
+    drop_table_if_exists("devices")
     op.execute("DROP TYPE IF EXISTS syncmode")

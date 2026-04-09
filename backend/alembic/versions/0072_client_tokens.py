@@ -9,6 +9,8 @@ Create Date: 2026-03-10 00:00:00.000000
 import sqlalchemy as sa
 from alembic import op
 
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+
 # revision identifiers, used by Alembic.
 revision = "0072_client_tokens"
 down_revision = "0071_sibling_roms_fs_name"
@@ -17,7 +19,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.create_table(
+    create_table_if_not_exists(
         "client_tokens",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
@@ -57,4 +59,4 @@ def downgrade() -> None:
     with op.batch_alter_table("client_tokens") as batch_op:
         batch_op.drop_index(batch_op.f("ix_client_tokens_user_id"))
         batch_op.drop_index(batch_op.f("ix_client_tokens_hashed_token"))
-    op.drop_table("client_tokens")
+    drop_table_if_exists("client_tokens")

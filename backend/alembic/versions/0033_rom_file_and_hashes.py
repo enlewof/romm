@@ -11,6 +11,7 @@ from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
 
 from utils.database import CustomJSON, is_postgresql
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0033_rom_file_and_hashes"
@@ -53,7 +54,7 @@ def upgrade() -> None:
             name="romfilecategory",
         )
 
-    op.create_table(
+    create_table_if_not_exists(
         "rom_files",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("rom_id", sa.Integer(), nullable=False),
@@ -255,7 +256,7 @@ def downgrade() -> None:
                 roms.file_size_bytes = aggregated_data.total_size;
             """)
 
-    op.drop_table("rom_files")
+    drop_table_if_exists("rom_files")
 
     if is_postgresql(connection):
         ENUM(name="romfilecategory").drop(connection, checkfirst=False)

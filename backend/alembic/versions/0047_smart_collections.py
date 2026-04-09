@@ -10,6 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 from utils.database import CustomJSON
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0047_smart_collections"
@@ -22,7 +23,7 @@ def upgrade() -> None:
     """Create smart collections table (no association table - purely computed)."""
 
     # Create the smart collections table
-    op.create_table(
+    create_table_if_not_exists(
         "smart_collections",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("name", sa.String(length=400), nullable=False),
@@ -59,4 +60,4 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Drop smart collections table."""
 
-    op.drop_table("smart_collections")
+    drop_table_if_exists("smart_collections")

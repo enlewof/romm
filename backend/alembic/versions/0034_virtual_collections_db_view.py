@@ -10,6 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 from utils.database import CustomJSON, is_postgresql
+from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0034_virtual_collections_db_view"
@@ -19,7 +20,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.create_table(
+    create_table_if_not_exists(
         "collections_roms",
         sa.Column("collection_id", sa.Integer(), nullable=False),
         sa.Column("rom_id", sa.Integer(), nullable=False),
@@ -285,7 +286,7 @@ def downgrade() -> None:
     with op.batch_alter_table("collections", schema=None) as batch_op:
         batch_op.alter_column("roms", existing_type=CustomJSON(), nullable=False)
 
-    op.drop_table("collections_roms")
+    drop_table_if_exists("collections_roms")
 
     connection.execute(
         sa.text("""
