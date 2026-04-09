@@ -170,9 +170,9 @@ def upgrade() -> None:
         batch_op.alter_column(
             "file_path", new_column_name="fs_path", existing_type=sa.String(length=1000)
         )
-        drop_column_if_exists(op, "roms", "files")
-        drop_column_if_exists(op, "roms", "multi")
-        drop_column_if_exists(op, "roms", "file_size_bytes")
+        drop_column_if_exists(batch_op, "files")
+        drop_column_if_exists(batch_op, "multi")
+        drop_column_if_exists(batch_op, "file_size_bytes")
 
 
 def downgrade() -> None:
@@ -180,17 +180,15 @@ def downgrade() -> None:
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            op,
-            "roms",
+            batch_op,
             sa.Column("multi", sa.Boolean(), nullable=False, server_default="0"),
         )
         batch_op.alter_column("multi", server_default=None)
         add_column_if_not_exists(
-            op, "roms", sa.Column("files", CustomJSON(), nullable=True)
+            batch_op, sa.Column("files", CustomJSON(), nullable=True)
         )
         add_column_if_not_exists(
-            op,
-            "roms",
+            batch_op,
             sa.Column(
                 "file_size_bytes", sa.BigInteger(), nullable=False, server_default="0"
             ),

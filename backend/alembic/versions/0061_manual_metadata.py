@@ -25,8 +25,7 @@ def upgrade():
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            op,
-            "roms",
+            batch_op,
             sa.Column(
                 "manual_metadata",
                 sa.JSON().with_variant(
@@ -391,4 +390,4 @@ def upgrade():
 
 def downgrade():
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        drop_column_if_exists(op, "roms", "manual_metadata")
+        drop_column_if_exists(batch_op, "manual_metadata")

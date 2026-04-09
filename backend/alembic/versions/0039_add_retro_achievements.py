@@ -22,54 +22,54 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("ra_metadata", CustomJSON(), nullable=True)
+            batch_op, sa.Column("ra_metadata", CustomJSON(), nullable=True)
         )
 
     with op.batch_alter_table("rom_files", schema=None) as batch_op:
         add_column_if_not_exists(
-            op, "rom_files", sa.Column("ra_hash", sa.String(length=100), nullable=True)
+            batch_op, sa.Column("ra_hash", sa.String(length=100), nullable=True)
         )
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
         add_column_if_not_exists(
-            op, "platforms", sa.Column("ra_id", sa.Integer(), nullable=True)
+            batch_op, sa.Column("ra_id", sa.Integer(), nullable=True)
         )
 
     with op.batch_alter_table("users", schema=None) as batch_op:
         add_column_if_not_exists(
-            op, "users", sa.Column("ra_username", sa.String(length=100), nullable=True)
+            batch_op, sa.Column("ra_username", sa.String(length=100), nullable=True)
         )
         add_column_if_not_exists(
-            op, "users", sa.Column("ra_progression", CustomJSON(), nullable=True)
+            batch_op, sa.Column("ra_progression", CustomJSON(), nullable=True)
         )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
         add_column_if_not_exists(
-            op, "roms", sa.Column("ra_id", sa.Integer(), nullable=True)
+            batch_op, sa.Column("ra_id", sa.Integer(), nullable=True)
         )
         add_column_if_not_exists(
-            op, "roms", sa.Column("ra_hash", sa.String(length=100), nullable=True)
+            batch_op, sa.Column("ra_hash", sa.String(length=100), nullable=True)
         )
         add_column_if_not_exists(
-            op, "roms", sa.Column("ra_metadata", CustomJSON(), nullable=True)
+            batch_op, sa.Column("ra_metadata", CustomJSON(), nullable=True)
         )
 
 
 def downgrade() -> None:
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        drop_column_if_exists(op, "rom_user", "ra_metadata")
+        drop_column_if_exists(batch_op, "ra_metadata")
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        drop_column_if_exists(op, "platforms", "ra_id")
+        drop_column_if_exists(batch_op, "ra_id")
 
     with op.batch_alter_table("users", schema=None) as batch_op:
-        drop_column_if_exists(op, "users", "ra_username")
-        drop_column_if_exists(op, "users", "ra_progression")
+        drop_column_if_exists(batch_op, "ra_username")
+        drop_column_if_exists(batch_op, "ra_progression")
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        drop_column_if_exists(op, "roms", "ra_id")
-        drop_column_if_exists(op, "roms", "ra_hash")
-        drop_column_if_exists(op, "roms", "ra_metadata")
+        drop_column_if_exists(batch_op, "ra_id")
+        drop_column_if_exists(batch_op, "ra_hash")
+        drop_column_if_exists(batch_op, "ra_metadata")
 
     with op.batch_alter_table("rom_files", schema=None) as batch_op:
-        drop_column_if_exists(op, "rom_files", "ra_hash")
+        drop_column_if_exists(batch_op, "ra_hash")

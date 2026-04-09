@@ -59,30 +59,29 @@ def upgrade() -> None:
 
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
         add_column_if_not_exists(
-            op,
-            "rom_user",
+            batch_op,
             sa.Column("last_played", sa.DateTime(timezone=True), nullable=True),
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("backlogged", sa.Boolean(), nullable=False)
+            batch_op, sa.Column("backlogged", sa.Boolean(), nullable=False)
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("now_playing", sa.Boolean(), nullable=False)
+            batch_op, sa.Column("now_playing", sa.Boolean(), nullable=False)
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("hidden", sa.Boolean(), nullable=False)
+            batch_op, sa.Column("hidden", sa.Boolean(), nullable=False)
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("rating", sa.Integer(), nullable=False)
+            batch_op, sa.Column("rating", sa.Integer(), nullable=False)
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("difficulty", sa.Integer(), nullable=False)
+            batch_op, sa.Column("difficulty", sa.Integer(), nullable=False)
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("completion", sa.Integer(), nullable=False)
+            batch_op, sa.Column("completion", sa.Integer(), nullable=False)
         )
         add_column_if_not_exists(
-            op, "rom_user", sa.Column("status", rom_user_status_enum, nullable=True)
+            batch_op, sa.Column("status", rom_user_status_enum, nullable=True)
         )
 
 
@@ -90,14 +89,14 @@ def downgrade() -> None:
     connection = op.get_bind()
 
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        drop_column_if_exists(op, "rom_user", "status")
-        drop_column_if_exists(op, "rom_user", "completion")
-        drop_column_if_exists(op, "rom_user", "difficulty")
-        drop_column_if_exists(op, "rom_user", "rating")
-        drop_column_if_exists(op, "rom_user", "hidden")
-        drop_column_if_exists(op, "rom_user", "now_playing")
-        drop_column_if_exists(op, "rom_user", "backlogged")
-        drop_column_if_exists(op, "rom_user", "last_played")
+        drop_column_if_exists(batch_op, "status")
+        drop_column_if_exists(batch_op, "completion")
+        drop_column_if_exists(batch_op, "difficulty")
+        drop_column_if_exists(batch_op, "rating")
+        drop_column_if_exists(batch_op, "hidden")
+        drop_column_if_exists(batch_op, "now_playing")
+        drop_column_if_exists(batch_op, "backlogged")
+        drop_column_if_exists(batch_op, "last_played")
 
     if is_postgresql(connection):
         ENUM(name="romuserstatus").drop(connection, checkfirst=False)

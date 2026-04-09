@@ -21,7 +21,7 @@ depends_on = None
 def upgrade() -> None:
     with op.batch_alter_table("collections", schema=None) as batch_op:
         add_column_if_not_exists(
-            op, "collections", sa.Column("is_favorite", sa.Boolean(), nullable=True)
+            batch_op, sa.Column("is_favorite", sa.Boolean(), nullable=True)
         )
 
     op.execute("UPDATE collections SET is_favorite = FALSE WHERE is_favorite IS NULL")
@@ -37,4 +37,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     with op.batch_alter_table("collections", schema=None) as batch_op:
-        drop_column_if_exists(op, "collections", "is_favorite")
+        drop_column_if_exists(batch_op, "is_favorite")
