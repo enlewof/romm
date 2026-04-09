@@ -11,6 +11,7 @@ from alembic import op
 
 from models.firmware import Firmware
 from utils.database import is_postgresql
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0050_firmware_add_is_verified"
@@ -21,7 +22,9 @@ depends_on = None
 
 def upgrade() -> None:
     with op.batch_alter_table("firmware", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("is_verified", sa.Boolean(), nullable=True))
+        add_column_if_not_exists(
+            "firmware", sa.Column("is_verified", sa.Boolean(), nullable=True)
+        )
 
     # Get all firmware records with their hash information
     connection = op.get_bind()
@@ -81,4 +84,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     with op.batch_alter_table("firmware", schema=None) as batch_op:
-        batch_op.drop_column("is_verified")
+        drop_column_if_exists("firmware", "is_verified")

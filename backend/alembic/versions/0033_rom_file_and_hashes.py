@@ -11,7 +11,12 @@ from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
 
 from utils.database import CustomJSON, is_postgresql
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_table_if_not_exists,
+    drop_column_if_exists,
+    drop_table_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "0033_rom_file_and_hashes"
@@ -164,24 +169,27 @@ def upgrade() -> None:
         batch_op.alter_column(
             "file_path", new_column_name="fs_path", existing_type=sa.String(length=1000)
         )
-        batch_op.drop_column("files")
-        batch_op.drop_column("multi")
-        batch_op.drop_column("file_size_bytes")
+        drop_column_if_exists("roms", "files")
+        drop_column_if_exists("roms", "multi")
+        drop_column_if_exists("roms", "file_size_bytes")
 
 
 def downgrade() -> None:
     connection = op.get_bind()
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(
-            sa.Column("multi", sa.Boolean(), nullable=False, server_default="0")
+        add_column_if_not_exists(
+            "roms", sa.Column("multi", sa.Boolean(), nullable=False, server_default="0")
         )
         batch_op.alter_column("multi", server_default=None)
-        batch_op.add_column(sa.Column("files", CustomJSON(), nullable=True))
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "roms", sa.Column("files", CustomJSON(), nullable=True)
+        )
+        add_column_if_not_exists(
+            "roms",
             sa.Column(
                 "file_size_bytes", sa.BigInteger(), nullable=False, server_default="0"
-            )
+            ),
         )
         batch_op.alter_column("file_size_bytes", server_default=None)
         batch_op.alter_column(

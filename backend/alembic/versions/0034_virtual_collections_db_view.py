@@ -10,7 +10,12 @@ import sqlalchemy as sa
 from alembic import op
 
 from utils.database import CustomJSON, is_postgresql
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_table_if_not_exists,
+    drop_column_if_exists,
+    drop_table_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "0034_virtual_collections_db_view"
@@ -252,12 +257,14 @@ def upgrade() -> None:
                 """),
         )
 
-    op.drop_column("collections", "roms")
+    drop_column_if_exists("collections", "roms")
 
 
 def downgrade() -> None:
     with op.batch_alter_table("collections", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("roms", CustomJSON(), nullable=True))
+        add_column_if_not_exists(
+            "collections", sa.Column("roms", CustomJSON(), nullable=True)
+        )
 
     connection = op.get_bind()
     if is_postgresql(connection):

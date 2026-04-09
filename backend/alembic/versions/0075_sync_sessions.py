@@ -11,7 +11,12 @@ from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
 
 from utils.database import is_postgresql
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_table_if_not_exists,
+    drop_column_if_exists,
+    drop_table_if_exists,
+)
 
 revision = "0075_sync_sessions"
 down_revision = "0074_fix_empty_json_arrays"
@@ -94,11 +99,13 @@ def upgrade() -> None:
     op.create_index("ix_sync_sessions_user_id", "sync_sessions", ["user_id"])
     op.create_index("ix_sync_sessions_status", "sync_sessions", ["status"])
 
-    op.add_column("devices", sa.Column("sync_config", sa.JSON(), nullable=True))
+    add_column_if_not_exists(
+        "devices", sa.Column("sync_config", sa.JSON(), nullable=True)
+    )
 
 
 def downgrade() -> None:
-    op.drop_column("devices", "sync_config")
+    drop_column_if_exists("devices", "sync_config")
 
     op.drop_index("ix_sync_sessions_status", table_name="sync_sessions")
 

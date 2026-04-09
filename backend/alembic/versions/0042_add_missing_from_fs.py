@@ -9,6 +9,8 @@ Create Date: 2025-06-11
 import sqlalchemy as sa
 from alembic import op
 
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
+
 # revision identifiers, used by Alembic.
 revision = "0042_add_missing_from_fs"
 down_revision = "0041_assets_t_thumb_cleanup"
@@ -18,73 +20,80 @@ depends_on = None
 
 def upgrade():
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "platforms",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "roms",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
     with op.batch_alter_table("rom_files", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "rom_files",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
     with op.batch_alter_table("firmware", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "firmware",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "saves",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
     with op.batch_alter_table("states", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "states",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
     with op.batch_alter_table("screenshots", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "screenshots",
             sa.Column(
                 "missing_from_fs", sa.Boolean(), nullable=False, server_default="0"
-            )
+            ),
         )
 
 
 def downgrade():
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("platforms", "missing_from_fs")
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("roms", "missing_from_fs")
 
     with op.batch_alter_table("rom_files", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("rom_files", "missing_from_fs")
 
     with op.batch_alter_table("firmware", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("firmware", "missing_from_fs")
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("saves", "missing_from_fs")
 
     with op.batch_alter_table("states", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("states", "missing_from_fs")
 
     with op.batch_alter_table("screenshots", schema=None) as batch_op:
-        batch_op.drop_column("missing_from_fs")
+        drop_column_if_exists("screenshots", "missing_from_fs")

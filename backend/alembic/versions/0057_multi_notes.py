@@ -10,7 +10,11 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import text
 
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_table_if_not_exists,
+    drop_table_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "0057_multi_notes"
@@ -108,11 +112,11 @@ def downgrade() -> None:
     """Drop the rom_notes table and restore note columns to rom_user."""
 
     # Add back the old columns to rom_user
-    op.add_column(
+    add_column_if_not_exists(
         "rom_user",
         sa.Column("note_raw_markdown", sa.Text(), nullable=False, server_default=""),
     )
-    op.add_column(
+    add_column_if_not_exists(
         "rom_user",
         sa.Column(
             "note_is_public", sa.Boolean(), nullable=False, server_default=text("false")

@@ -9,7 +9,12 @@ Create Date: 2026-01-17
 import sqlalchemy as sa
 from alembic import op
 
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_table_if_not_exists,
+    drop_column_if_exists,
+    drop_table_if_exists,
+)
 
 revision = "0068_save_sync"
 down_revision = "0067_romfile_category_enum_cheat"
@@ -76,8 +81,12 @@ def upgrade():
     )
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("slot", sa.String(255), nullable=True))
-        batch_op.add_column(sa.Column("content_hash", sa.String(32), nullable=True))
+        add_column_if_not_exists(
+            "saves", sa.Column("slot", sa.String(255), nullable=True)
+        )
+        add_column_if_not_exists(
+            "saves", sa.Column("content_hash", sa.String(32), nullable=True)
+        )
 
     op.create_index("ix_devices_user_id", "devices", ["user_id"])
     op.create_index("ix_devices_last_seen", "devices", ["last_seen"])
@@ -96,8 +105,8 @@ def downgrade():
     op.drop_index("ix_devices_user_id", "devices")
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
-        batch_op.drop_column("content_hash")
-        batch_op.drop_column("slot")
+        drop_column_if_exists("saves", "content_hash")
+        drop_column_if_exists("saves", "slot")
 
     drop_table_if_exists("device_save_sync")
     drop_table_if_exists("devices")

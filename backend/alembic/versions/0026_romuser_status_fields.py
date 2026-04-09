@@ -11,6 +11,7 @@ from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
 
 from utils.database import is_postgresql
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0026_romuser_status_fields"
@@ -57,30 +58,45 @@ def upgrade() -> None:
         )
 
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        batch_op.add_column(
-            sa.Column("last_played", sa.DateTime(timezone=True), nullable=True)
+        add_column_if_not_exists(
+            "rom_user",
+            sa.Column("last_played", sa.DateTime(timezone=True), nullable=True),
         )
-        batch_op.add_column(sa.Column("backlogged", sa.Boolean(), nullable=False))
-        batch_op.add_column(sa.Column("now_playing", sa.Boolean(), nullable=False))
-        batch_op.add_column(sa.Column("hidden", sa.Boolean(), nullable=False))
-        batch_op.add_column(sa.Column("rating", sa.Integer(), nullable=False))
-        batch_op.add_column(sa.Column("difficulty", sa.Integer(), nullable=False))
-        batch_op.add_column(sa.Column("completion", sa.Integer(), nullable=False))
-        batch_op.add_column(sa.Column("status", rom_user_status_enum, nullable=True))
+        add_column_if_not_exists(
+            "rom_user", sa.Column("backlogged", sa.Boolean(), nullable=False)
+        )
+        add_column_if_not_exists(
+            "rom_user", sa.Column("now_playing", sa.Boolean(), nullable=False)
+        )
+        add_column_if_not_exists(
+            "rom_user", sa.Column("hidden", sa.Boolean(), nullable=False)
+        )
+        add_column_if_not_exists(
+            "rom_user", sa.Column("rating", sa.Integer(), nullable=False)
+        )
+        add_column_if_not_exists(
+            "rom_user", sa.Column("difficulty", sa.Integer(), nullable=False)
+        )
+        add_column_if_not_exists(
+            "rom_user", sa.Column("completion", sa.Integer(), nullable=False)
+        )
+        add_column_if_not_exists(
+            "rom_user", sa.Column("status", rom_user_status_enum, nullable=True)
+        )
 
 
 def downgrade() -> None:
     connection = op.get_bind()
 
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        batch_op.drop_column("status")
-        batch_op.drop_column("completion")
-        batch_op.drop_column("difficulty")
-        batch_op.drop_column("rating")
-        batch_op.drop_column("hidden")
-        batch_op.drop_column("now_playing")
-        batch_op.drop_column("backlogged")
-        batch_op.drop_column("last_played")
+        drop_column_if_exists("rom_user", "status")
+        drop_column_if_exists("rom_user", "completion")
+        drop_column_if_exists("rom_user", "difficulty")
+        drop_column_if_exists("rom_user", "rating")
+        drop_column_if_exists("rom_user", "hidden")
+        drop_column_if_exists("rom_user", "now_playing")
+        drop_column_if_exists("rom_user", "backlogged")
+        drop_column_if_exists("rom_user", "last_played")
 
     if is_postgresql(connection):
         ENUM(name="romuserstatus").drop(connection, checkfirst=False)

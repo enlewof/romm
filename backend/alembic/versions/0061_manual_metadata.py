@@ -11,6 +11,7 @@ from alembic import op
 from sqlalchemy.dialects import postgresql
 
 from utils.database import is_postgresql
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0061_manual_metadata"
@@ -23,14 +24,15 @@ def upgrade():
     connection = op.get_bind()
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "roms",
             sa.Column(
                 "manual_metadata",
                 sa.JSON().with_variant(
                     postgresql.JSONB(astext_type=sa.Text()), "postgresql"
                 ),
                 nullable=True,
-            )
+            ),
         )
 
     if is_postgresql(connection):
@@ -388,4 +390,4 @@ def upgrade():
 
 def downgrade():
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_column("manual_metadata")
+        drop_column_if_exists("roms", "manual_metadata")

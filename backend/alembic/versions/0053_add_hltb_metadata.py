@@ -10,6 +10,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
+
 # revision identifiers, used by Alembic.
 revision = "0053_add_hltb_metadata"
 down_revision = "0052_roms_metadata_flashpoint"
@@ -19,15 +21,18 @@ depends_on = None
 
 def upgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("hltb_id", sa.Integer(), nullable=True))
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "roms", sa.Column("hltb_id", sa.Integer(), nullable=True)
+        )
+        add_column_if_not_exists(
+            "roms",
             sa.Column(
                 "hltb_metadata",
                 sa.JSON().with_variant(
                     postgresql.JSONB(astext_type=sa.Text()), "postgresql"
                 ),
                 nullable=True,
-            )
+            ),
         )
         batch_op.create_index("idx_roms_hltb_id", ["hltb_id"], unique=False)
 
@@ -35,5 +40,5 @@ def upgrade() -> None:
 def downgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
         batch_op.drop_index("idx_roms_hltb_id")
-        batch_op.drop_column("hltb_metadata")
-        batch_op.drop_column("hltb_id")
+        drop_column_if_exists("roms", "hltb_metadata")
+        drop_column_if_exists("roms", "hltb_id")

@@ -10,6 +10,8 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
+
 # revision identifiers, used by Alembic.
 revision = "0060_user_ui_settings"
 down_revision = "0059_rom_version_tag"
@@ -20,18 +22,19 @@ depends_on = None
 def upgrade() -> None:
     """Add ui_settings column to users table."""
     with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "users",
             sa.Column(
                 "ui_settings",
                 sa.JSON().with_variant(
                     postgresql.JSONB(astext_type=sa.Text()), "postgresql"
                 ),
                 nullable=True,
-            )
+            ),
         )
 
 
 def downgrade() -> None:
     """Remove ui_settings column from users table."""
     with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.drop_column("ui_settings")
+        drop_column_if_exists("users", "ui_settings")

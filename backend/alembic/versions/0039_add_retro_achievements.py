@@ -10,6 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 from utils.database import CustomJSON
+from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0039_add_retro_achievements"
@@ -20,41 +21,55 @@ depends_on = None
 
 def upgrade() -> None:
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("ra_metadata", CustomJSON(), nullable=True))
+        add_column_if_not_exists(
+            "rom_user", sa.Column("ra_metadata", CustomJSON(), nullable=True)
+        )
 
     with op.batch_alter_table("rom_files", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("ra_hash", sa.String(length=100), nullable=True))
+        add_column_if_not_exists(
+            "rom_files", sa.Column("ra_hash", sa.String(length=100), nullable=True)
+        )
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("ra_id", sa.Integer(), nullable=True))
+        add_column_if_not_exists(
+            "platforms", sa.Column("ra_id", sa.Integer(), nullable=True)
+        )
 
     with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.add_column(
-            sa.Column("ra_username", sa.String(length=100), nullable=True)
+        add_column_if_not_exists(
+            "users", sa.Column("ra_username", sa.String(length=100), nullable=True)
         )
-        batch_op.add_column(sa.Column("ra_progression", CustomJSON(), nullable=True))
+        add_column_if_not_exists(
+            "users", sa.Column("ra_progression", CustomJSON(), nullable=True)
+        )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(sa.Column("ra_id", sa.Integer(), nullable=True))
-        batch_op.add_column(sa.Column("ra_hash", sa.String(length=100), nullable=True))
-        batch_op.add_column(sa.Column("ra_metadata", CustomJSON(), nullable=True))
+        add_column_if_not_exists(
+            "roms", sa.Column("ra_id", sa.Integer(), nullable=True)
+        )
+        add_column_if_not_exists(
+            "roms", sa.Column("ra_hash", sa.String(length=100), nullable=True)
+        )
+        add_column_if_not_exists(
+            "roms", sa.Column("ra_metadata", CustomJSON(), nullable=True)
+        )
 
 
 def downgrade() -> None:
     with op.batch_alter_table("rom_user", schema=None) as batch_op:
-        batch_op.drop_column("ra_metadata")
+        drop_column_if_exists("rom_user", "ra_metadata")
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.drop_column("ra_id")
+        drop_column_if_exists("platforms", "ra_id")
 
     with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.drop_column("ra_username")
-        batch_op.drop_column("ra_progression")
+        drop_column_if_exists("users", "ra_username")
+        drop_column_if_exists("users", "ra_progression")
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_column("ra_id")
-        batch_op.drop_column("ra_hash")
-        batch_op.drop_column("ra_metadata")
+        drop_column_if_exists("roms", "ra_id")
+        drop_column_if_exists("roms", "ra_hash")
+        drop_column_if_exists("roms", "ra_metadata")
 
     with op.batch_alter_table("rom_files", schema=None) as batch_op:
-        batch_op.drop_column("ra_hash")
+        drop_column_if_exists("rom_files", "ra_hash")

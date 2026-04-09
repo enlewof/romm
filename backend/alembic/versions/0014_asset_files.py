@@ -16,7 +16,12 @@ from sqlalchemy.orm import sessionmaker
 from config import ROMM_DB_DRIVER
 from config.config_manager import SQLITE_DB_BASE_PATH, ConfigManager
 from utils.database import CustomJSON, is_postgresql
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_table_if_not_exists,
+    drop_column_if_exists,
+    drop_table_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "0014_asset_files"
@@ -164,7 +169,7 @@ def upgrade() -> None:
             connection, table_name="platforms"
         )["name"]
         batch_op.drop_constraint(constraint_name=pk_constraint_name, type_="primary")
-        batch_op.drop_column("n_roms")
+        drop_column_if_exists("platforms", "n_roms")
 
     # Switch to new id column as platform primary key
     if is_postgresql(connection):
@@ -176,14 +181,18 @@ def upgrade() -> None:
 
     # Add new columns to roms table
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(
-            sa.Column("file_name_no_ext", sa.String(length=450), nullable=False)
+        add_column_if_not_exists(
+            "roms", sa.Column("file_name_no_ext", sa.String(length=450), nullable=False)
         )
-        batch_op.add_column(
-            sa.Column("file_size_bytes", sa.BigInteger(), nullable=False)
+        add_column_if_not_exists(
+            "roms", sa.Column("file_size_bytes", sa.BigInteger(), nullable=False)
         )
-        batch_op.add_column(sa.Column("igdb_metadata", CustomJSON(), nullable=True))
-        batch_op.add_column(sa.Column("platform_id", sa.Integer(), nullable=False))
+        add_column_if_not_exists(
+            "roms", sa.Column("igdb_metadata", CustomJSON(), nullable=True)
+        )
+        add_column_if_not_exists(
+            "roms", sa.Column("platform_id", sa.Integer(), nullable=False)
+        )
         batch_op.alter_column(
             "revision",
             existing_type=sa.VARCHAR(length=20),
@@ -239,32 +248,36 @@ def upgrade() -> None:
             ["id"],
             ondelete="CASCADE",
         )
-        batch_op.drop_column("file_size")
-        batch_op.drop_column("file_size_units")
-        batch_op.drop_column("p_sgdb_id")
-        batch_op.drop_column("p_name")
-        batch_op.drop_column("p_igdb_id")
-        batch_op.drop_column("platform_slug")
+        drop_column_if_exists("roms", "file_size")
+        drop_column_if_exists("roms", "file_size_units")
+        drop_column_if_exists("roms", "p_sgdb_id")
+        drop_column_if_exists("roms", "p_name")
+        drop_column_if_exists("roms", "p_igdb_id")
+        drop_column_if_exists("roms", "platform_slug")
 
 
 def downgrade() -> None:
     connection = op.get_bind()
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.add_column(
-            sa.Column("platform_slug", sa.VARCHAR(length=50), nullable=False)
+        add_column_if_not_exists(
+            "roms", sa.Column("platform_slug", sa.VARCHAR(length=50), nullable=False)
         )
-        batch_op.add_column(
-            sa.Column("p_igdb_id", sa.VARCHAR(length=10), nullable=True)
+        add_column_if_not_exists(
+            "roms", sa.Column("p_igdb_id", sa.VARCHAR(length=10), nullable=True)
         )
-        batch_op.add_column(sa.Column("p_name", sa.VARCHAR(length=150), nullable=True))
-        batch_op.add_column(
-            sa.Column("p_sgdb_id", sa.VARCHAR(length=10), nullable=True)
+        add_column_if_not_exists(
+            "roms", sa.Column("p_name", sa.VARCHAR(length=150), nullable=True)
         )
-        batch_op.add_column(
-            sa.Column("file_size_units", sa.VARCHAR(length=10), nullable=False)
+        add_column_if_not_exists(
+            "roms", sa.Column("p_sgdb_id", sa.VARCHAR(length=10), nullable=True)
         )
-        batch_op.add_column(sa.Column("file_size", sa.FLOAT(), nullable=False))
+        add_column_if_not_exists(
+            "roms", sa.Column("file_size_units", sa.VARCHAR(length=10), nullable=False)
+        )
+        add_column_if_not_exists(
+            "roms", sa.Column("file_size", sa.FLOAT(), nullable=False)
+        )
         batch_op.drop_constraint("fk_platform_id_roms", type_="foreignkey")
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
@@ -303,10 +316,10 @@ def downgrade() -> None:
 
     # Cleanup roms table
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_column("platform_id")
-        batch_op.drop_column("igdb_metadata")
-        batch_op.drop_column("file_size_bytes")
-        batch_op.drop_column("file_name_no_ext")
+        drop_column_if_exists("roms", "platform_id")
+        drop_column_if_exists("roms", "igdb_metadata")
+        drop_column_if_exists("roms", "file_size_bytes")
+        drop_column_if_exists("roms", "file_name_no_ext")
         batch_op.alter_column(
             "revision",
             existing_type=sa.String(length=100),
@@ -315,15 +328,16 @@ def downgrade() -> None:
         )
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.add_column(
+        add_column_if_not_exists(
+            "platforms",
             sa.Column(
                 "n_roms",
                 sa.INTEGER(),
                 autoincrement=False,
                 nullable=True,
-            )
+            ),
         )
-        batch_op.drop_column("id")
+        drop_column_if_exists("platforms", "id")
         batch_op.create_primary_key(constraint_name=None, columns=["slug"])
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
