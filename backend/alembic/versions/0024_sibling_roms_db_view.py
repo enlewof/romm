@@ -10,6 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 from utils.database import is_postgresql
+from utils.migration_helpers import create_index_if_not_exists, drop_index_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0024_sibling_roms_db_view"
@@ -20,8 +21,8 @@ depends_on = None
 
 def upgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.create_index("idx_roms_igdb_id", ["igdb_id"])
-        batch_op.create_index("idx_roms_moby_id", ["moby_id"])
+        create_index_if_not_exists(batch_op, "idx_roms_igdb_id", ["igdb_id"])
+        create_index_if_not_exists(batch_op, "idx_roms_moby_id", ["moby_id"])
 
     connection = op.get_bind()
     null_safe_equal_operator = (
@@ -65,5 +66,5 @@ def downgrade() -> None:
     )
 
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_index("idx_roms_igdb_id")
-        batch_op.drop_index("idx_roms_moby_id")
+        drop_index_if_exists(batch_op, "idx_roms_igdb_id")
+        drop_index_if_exists(batch_op, "idx_roms_moby_id")

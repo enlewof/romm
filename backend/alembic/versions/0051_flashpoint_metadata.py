@@ -10,7 +10,12 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_index_if_not_exists,
+    drop_column_if_exists,
+    drop_index_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "0051_flashpoint_metadata"
@@ -34,11 +39,13 @@ def upgrade() -> None:
                 nullable=True,
             ),
         )
-        batch_op.create_index("idx_roms_flashpoint_id", ["flashpoint_id"], unique=False)
+        create_index_if_not_exists(
+            batch_op, "idx_roms_flashpoint_id", ["flashpoint_id"], unique=False
+        )
 
 
 def downgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_index("idx_roms_flashpoint_id")
+        drop_index_if_exists(batch_op, "idx_roms_flashpoint_id")
         drop_column_if_exists(batch_op, "flashpoint_metadata")
         drop_column_if_exists(batch_op, "flashpoint_id")

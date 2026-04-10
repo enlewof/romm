@@ -9,7 +9,12 @@ Create Date: 2026-03-10 00:00:00.000000
 import sqlalchemy as sa
 from alembic import op
 
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    create_index_if_not_exists,
+    create_table_if_not_exists,
+    drop_index_if_exists,
+    drop_table_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "0072_client_tokens"
@@ -45,12 +50,14 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     with op.batch_alter_table("client_tokens") as batch_op:
-        batch_op.create_index(
+        create_index_if_not_exists(
+            batch_op,
             batch_op.f("ix_client_tokens_hashed_token"),
             ["hashed_token"],
             unique=True,
         )
-        batch_op.create_index(
+        create_index_if_not_exists(
+            batch_op,
             batch_op.f("ix_client_tokens_user_id"),
             ["user_id"],
         )
@@ -58,6 +65,6 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     with op.batch_alter_table("client_tokens") as batch_op:
-        batch_op.drop_index(batch_op.f("ix_client_tokens_user_id"))
-        batch_op.drop_index(batch_op.f("ix_client_tokens_hashed_token"))
+        drop_index_if_exists(batch_op, batch_op.f("ix_client_tokens_user_id"))
+        drop_index_if_exists(batch_op, batch_op.f("ix_client_tokens_hashed_token"))
     drop_table_if_exists(op, "client_tokens")

@@ -8,6 +8,8 @@ Create Date: 2026-01-12
 
 from alembic import op
 
+from utils.migration_helpers import create_index_if_not_exists, drop_index_if_exists
+
 # revision identifiers, used by Alembic.
 revision = "0064_add_updated_at_indexes"
 down_revision = "0063_roms_metadata_player_count"
@@ -17,15 +19,19 @@ depends_on = None
 
 def upgrade():
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.create_index("ix_roms_updated_at", ["updated_at"], unique=False)
+        create_index_if_not_exists(
+            batch_op, "ix_roms_updated_at", ["updated_at"], unique=False
+        )
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.create_index("ix_platforms_updated_at", ["updated_at"], unique=False)
+        create_index_if_not_exists(
+            batch_op, "ix_platforms_updated_at", ["updated_at"], unique=False
+        )
 
 
 def downgrade():
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_index("ix_roms_updated_at")
+        drop_index_if_exists(batch_op, "ix_roms_updated_at")
 
     with op.batch_alter_table("platforms", schema=None) as batch_op:
-        batch_op.drop_index("ix_platforms_updated_at")
+        drop_index_if_exists(batch_op, "ix_platforms_updated_at")

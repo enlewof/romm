@@ -46,3 +46,56 @@ def drop_column_if_exists(batch_op: BatchOperations, column_name: str):
     """Wrap drop_column — skips if the column is already gone."""
     if column_name in _get_column_names(batch_op):
         batch_op.drop_column(column_name)
+
+
+# ---------------------------------------------------------------------------
+# Index helpers
+# ---------------------------------------------------------------------------
+
+
+def _get_index_names(ops):
+    """Return the set of index names on the table behind *ops*.
+
+    *ops* may be the top-level ``op`` proxy (requires *table_name*) or a
+    ``batch_op`` context (table name is implicit).
+    """
+    if isinstance(ops, BatchOperations):
+        table_name = ops.impl.table_name
+    else:
+        return set()  # caller must pass table_name for standalone op
+    indexes = inspect(ops.get_bind()).get_indexes(table_name)
+    return {idx["name"] for idx in indexes}
+
+
+def _get_index_names_for_table(op, table_name: str):
+    """Return index names for *table_name* using the top-level ``op`` proxy."""
+    indexes = inspect(op.get_bind()).get_indexes(table_name)
+    return {idx["name"] for idx in indexes}
+
+
+def create_index_if_not_exists(
+    batch_op: BatchOperations, index_name: str, columns, **kwargs
+):
+    """Wrap batch_op.create_index — skips if the index already exists."""
+    if index_name not in _get_index_names(batch_op):
+        batch_op.create_index(index_name, columns, **kwargs)
+
+
+def drop_index_if_exists(batch_op: BatchOperations, index_name: str):
+    """Wrap batch_op.drop_index — skips if the index is already gone."""
+    if index_name in _get_index_names(batch_op):
+        batch_op.drop_index(index_name)
+
+
+def create_index_if_not_exists_op(
+    op, index_name: str, table_name: str, columns, **kwargs
+):
+    """Wrap op.create_index — skips if the index already exists."""
+    if index_name not in _get_index_names_for_table(op, table_name):
+        op.create_index(index_name, table_name, columns, **kwargs)
+
+
+def drop_index_if_exists_op(op, index_name: str, table_name: str):
+    """Wrap op.drop_index — skips if the index is already gone."""
+    if index_name in _get_index_names_for_table(op, table_name):
+        op.drop_index(index_name, table_name=table_name)

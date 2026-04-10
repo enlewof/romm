@@ -10,6 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 from utils.database import is_postgresql
+from utils.migration_helpers import create_index_if_not_exists, drop_index_if_exists
 
 # revision identifiers, used by Alembic.
 revision = "0073_sibling_roms_metadata_only"
@@ -21,7 +22,7 @@ depends_on = None
 def upgrade() -> None:
     # Drop the fs_name_no_tags index created in 0069, no longer used
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_index("idx_roms_fs_name_no_tags")
+        drop_index_if_exists(batch_op, "idx_roms_fs_name_no_tags")
 
     connection = op.get_bind()
     null_safe_equal_operator = (
@@ -78,7 +79,9 @@ def downgrade() -> None:
 
     # Recreate the fs_name_no_tags index needed by the restored view
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.create_index("idx_roms_fs_name_no_tags", ["fs_name_no_tags"])
+        create_index_if_not_exists(
+            batch_op, "idx_roms_fs_name_no_tags", ["fs_name_no_tags"]
+        )
 
     # Restore view with fs_name_no_tags matching (from 0071)
     connection.execute(

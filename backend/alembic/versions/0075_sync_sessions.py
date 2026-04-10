@@ -13,8 +13,10 @@ from sqlalchemy.dialects.postgresql import ENUM
 from utils.database import is_postgresql
 from utils.migration_helpers import (
     add_column_if_not_exists,
+    create_index_if_not_exists_op,
     create_table_if_not_exists,
     drop_column_if_exists,
+    drop_index_if_exists_op,
     drop_table_if_exists,
 )
 
@@ -96,9 +98,15 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_sync_sessions_device_id", "sync_sessions", ["device_id"])
-    op.create_index("ix_sync_sessions_user_id", "sync_sessions", ["user_id"])
-    op.create_index("ix_sync_sessions_status", "sync_sessions", ["status"])
+    create_index_if_not_exists_op(
+        op, "ix_sync_sessions_device_id", "sync_sessions", ["device_id"]
+    )
+    create_index_if_not_exists_op(
+        op, "ix_sync_sessions_user_id", "sync_sessions", ["user_id"]
+    )
+    create_index_if_not_exists_op(
+        op, "ix_sync_sessions_status", "sync_sessions", ["status"]
+    )
 
     add_column_if_not_exists(
         op, "devices", sa.Column("sync_config", sa.JSON(), nullable=True)
@@ -108,7 +116,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     drop_column_if_exists(op, "devices", "sync_config")
 
-    op.drop_index("ix_sync_sessions_status", table_name="sync_sessions")
+    drop_index_if_exists_op(op, "ix_sync_sessions_status", table_name="sync_sessions")
 
     drop_table_if_exists(op, "sync_sessions")
 

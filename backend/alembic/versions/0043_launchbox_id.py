@@ -11,7 +11,12 @@ from alembic import op
 from sqlalchemy.dialects import postgresql
 
 from utils.database import CustomJSON
-from utils.migration_helpers import add_column_if_not_exists, drop_column_if_exists
+from utils.migration_helpers import (
+    add_column_if_not_exists,
+    create_index_if_not_exists,
+    drop_column_if_exists,
+    drop_index_if_exists,
+)
 
 revision = "0043_launchbox_id"
 down_revision = "0042_add_missing_from_fs"
@@ -42,16 +47,20 @@ def upgrade() -> None:
                 nullable=True,
             ),
         )
-        batch_op.create_index("idx_roms_launchbox_id", ["launchbox_id"], unique=False)
-        batch_op.create_index("idx_roms_ra_id", ["ra_id"], unique=False)
-        batch_op.create_index("idx_roms_sgdb_id", ["sgdb_id"], unique=False)
+        create_index_if_not_exists(
+            batch_op, "idx_roms_launchbox_id", ["launchbox_id"], unique=False
+        )
+        create_index_if_not_exists(batch_op, "idx_roms_ra_id", ["ra_id"], unique=False)
+        create_index_if_not_exists(
+            batch_op, "idx_roms_sgdb_id", ["sgdb_id"], unique=False
+        )
 
 
 def downgrade() -> None:
     with op.batch_alter_table("roms", schema=None) as batch_op:
-        batch_op.drop_index("idx_roms_sgdb_id")
-        batch_op.drop_index("idx_roms_ra_id")
-        batch_op.drop_index("idx_roms_launchbox_id")
+        drop_index_if_exists(batch_op, "idx_roms_sgdb_id")
+        drop_index_if_exists(batch_op, "idx_roms_ra_id")
+        drop_index_if_exists(batch_op, "idx_roms_launchbox_id")
         drop_column_if_exists(batch_op, "launchbox_metadata")
         drop_column_if_exists(batch_op, "launchbox_id")
 

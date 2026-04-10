@@ -11,8 +11,10 @@ from alembic import op
 
 from utils.migration_helpers import (
     add_column_if_not_exists,
+    create_index_if_not_exists_op,
     create_table_if_not_exists,
     drop_column_if_exists,
+    drop_index_if_exists_op,
     drop_table_if_exists,
 )
 
@@ -90,21 +92,23 @@ def upgrade():
             batch_op, sa.Column("content_hash", sa.String(32), nullable=True)
         )
 
-    op.create_index("ix_devices_user_id", "devices", ["user_id"])
-    op.create_index("ix_devices_last_seen", "devices", ["last_seen"])
-    op.create_index("ix_device_save_sync_save_id", "device_save_sync", ["save_id"])
-    op.create_index("ix_saves_slot", "saves", ["slot"])
-    op.create_index(
-        "ix_saves_rom_user_hash", "saves", ["rom_id", "user_id", "content_hash"]
+    create_index_if_not_exists_op(op, "ix_devices_user_id", "devices", ["user_id"])
+    create_index_if_not_exists_op(op, "ix_devices_last_seen", "devices", ["last_seen"])
+    create_index_if_not_exists_op(
+        op, "ix_device_save_sync_save_id", "device_save_sync", ["save_id"]
+    )
+    create_index_if_not_exists_op(op, "ix_saves_slot", "saves", ["slot"])
+    create_index_if_not_exists_op(
+        op, "ix_saves_rom_user_hash", "saves", ["rom_id", "user_id", "content_hash"]
     )
 
 
 def downgrade():
-    op.drop_index("ix_saves_rom_user_hash", "saves")
-    op.drop_index("ix_saves_slot", "saves")
-    op.drop_index("ix_device_save_sync_save_id", "device_save_sync")
-    op.drop_index("ix_devices_last_seen", "devices")
-    op.drop_index("ix_devices_user_id", "devices")
+    drop_index_if_exists_op(op, "ix_saves_rom_user_hash", "saves")
+    drop_index_if_exists_op(op, "ix_saves_slot", "saves")
+    drop_index_if_exists_op(op, "ix_device_save_sync_save_id", "device_save_sync")
+    drop_index_if_exists_op(op, "ix_devices_last_seen", "devices")
+    drop_index_if_exists_op(op, "ix_devices_user_id", "devices")
 
     with op.batch_alter_table("saves", schema=None) as batch_op:
         drop_column_if_exists(batch_op, "content_hash")

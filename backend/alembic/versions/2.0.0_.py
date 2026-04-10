@@ -11,7 +11,12 @@ from alembic import op
 from sqlalchemy.dialects.postgresql import ENUM
 
 from utils.database import is_postgresql
-from utils.migration_helpers import create_table_if_not_exists, drop_table_if_exists
+from utils.migration_helpers import (
+    create_index_if_not_exists,
+    create_table_if_not_exists,
+    drop_index_if_exists,
+    drop_table_if_exists,
+)
 
 # revision identifiers, used by Alembic.
 revision = "2.0.0"
@@ -36,8 +41,8 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.create_index(
-            batch_op.f("ix_users_username"), ["username"], unique=True
+        create_index_if_not_exists(
+            batch_op, batch_op.f("ix_users_username"), ["username"], unique=True
         )
 
     # ### end Alembic commands ###
@@ -47,7 +52,7 @@ def downgrade() -> None:
     connection = op.get_bind()
 
     with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f("ix_users_username"))
+        drop_index_if_exists(batch_op, batch_op.f("ix_users_username"))
 
     drop_table_if_exists(op, "users")
 
