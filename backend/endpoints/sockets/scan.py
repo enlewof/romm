@@ -455,6 +455,13 @@ async def _identify_platform(
     scanned_platform = await scan_platform(platform_slug, fs_platforms)
     if platform:
         scanned_platform.id = platform.id
+        # When the slug changes (e.g. the folder was re-mapped as a variant of a
+        # different base platform via PLATFORMS_VERSIONS), the old custom_name no
+        # longer applies to the new platform identity.  Explicitly reset it so
+        # that session.merge() clears the stale value in the database and the
+        # platform displays its canonical metadata name instead.
+        if platform.slug != scanned_platform.slug:
+            scanned_platform.custom_name = ""
 
     await scan_stats.increment(
         socket_manager=socket_manager,

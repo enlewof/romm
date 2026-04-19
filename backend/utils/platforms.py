@@ -26,7 +26,19 @@ def get_supported_platforms() -> list[PlatformSchema]:
         Flashpoint, and HowLongToBeat.
     """
     db_platforms = db_platform_handler.get_platforms()
-    db_platforms_map = {p.slug: p for p in db_platforms}
+
+    # Build a slug → platform map, preferring the "canonical" platform when
+    # multiple DB entries share the same slug (e.g. when several folder variants
+    # all point to the same base platform after a scan).  A platform is
+    # considered canonical when its folder name matches the slug
+    # (case-insensitively), i.e. the folder was not remapped via
+    # PLATFORMS_VERSIONS / PLATFORMS_BINDING.  When no canonical entry exists
+    # the first entry encountered (ordered by name ASC in the DB query) wins.
+    db_platforms_map: dict[str, Platform] = {}
+    for p in db_platforms:
+        slug = p.slug
+        if slug not in db_platforms_map or p.fs_slug.lower() == slug.lower():
+            db_platforms_map[slug] = p
 
     now = datetime.now(timezone.utc)
     supported_platforms = []
