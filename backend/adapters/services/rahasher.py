@@ -106,6 +106,14 @@ class RAHasherService:
     """Service to calculate RetroAchievements hashes using RAHasher."""
 
     async def calculate_hash(self, platform: RAGamesPlatform, file_path: str) -> str:
+        """Return the RA hash for ``file_path`` on ``platform``.
+
+        Returns an empty string when the combination is unsupported by design
+        (e.g. an archived ROM on a disc-based platform that only does on-disk
+        hashing). Raises :class:`RAHasherError` for any actual failure — binary
+        missing, non-zero exit, empty stdout, malformed hash — so callers can
+        surface the problem instead of silently treating it as "no match".
+        """
         # Skip the subprocess entirely when the file is an archive and the
         # RA platform needs an on-disk disc image. RAHasher would just spawn,
         # fail with "Unsupported console for buffer hash: {id}", and return
@@ -138,28 +146,32 @@ class RAHasherService:
         return_code = await proc.wait()
         if return_code != 0:
             if proc.stderr is not None:
-                stderr = (await proc.stderr.read()).decode("utf-8")
+                stderr = (await proc.stderr.read()).decode("utf-8").strip()
             else:
-                stderr = None
-            log.error(f"RAHasher failed with code {return_code}. {stderr=}")
-            return ""
+                stderr = ""
+            raise RAHasherError(
+                f"RAHasher exited {return_code} for {file_path} "
+                f"(platform ID: {platform['ra_id']}): {stderr or '<no stderr>'}"
+            )
 
         if proc.stdout is None:
-            log.error("RAHasher did not return a hash.")
-            return ""
+            raise RAHasherError(
+                f"RAHasher produced no stdout for {file_path} "
+                f"(platform ID: {platform['ra_id']})"
+            )
 
         file_hash = (await proc.stdout.read()).decode("utf-8").strip()
         if not file_hash:
-            log.error(
-                f"RAHasher returned an empty hash for file {file_path} (platform ID: {platform['ra_id']})"
+            raise RAHasherError(
+                f"RAHasher returned an empty hash for {file_path} "
+                f"(platform ID: {platform['ra_id']})"
             )
-            return ""
 
         match = RAHASHER_VALID_HASH_REGEX.search(file_hash)
         if not match:
-            log.error(
-                f"RAHasher returned invalid hash {file_hash} for file {file_path} (platform ID: {platform['ra_id']})"
+            raise RAHasherError(
+                f"RAHasher returned invalid hash {file_hash!r} for {file_path} "
+                f"(platform ID: {platform['ra_id']})"
             )
-            return ""
 
         return match.group(0)

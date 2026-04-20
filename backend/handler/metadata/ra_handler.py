@@ -178,36 +178,7 @@ class RAHandler(MetadataHandler):
         if not rom.platform.ra_id:
             return None
 
-        # Fetch all hashes for specific platform
-        roms: list[RAGameListItem]
-        if (
-            REFRESH_RETROACHIEVEMENTS_CACHE_DAYS
-            <= await self._days_since_last_cache_file_update(rom.platform.id)
-            or not await self._exists_cache_file(rom.platform.id)
-        ):
-            # Write the roms result to a JSON file if older than REFRESH_RETROACHIEVEMENTS_CACHE_DAYS days
-            roms = await self.ra_service.get_game_list(
-                system_id=rom.platform.ra_id,
-                only_games_with_achievements=True,
-                include_hashes=True,
-            )
-
-            platform_resources_path = fs_resource_handler.get_platform_resources_path(
-                rom.platform.id
-            )
-
-            json_file = json.dumps(roms, indent=4)
-            await fs_resource_handler.write_file(
-                json_file.encode("utf-8"),
-                platform_resources_path,
-                self.HASHES_FILE_NAME,
-            )
-        else:
-            # Read the roms result from the JSON file
-            json_file_bytes = await fs_resource_handler.read_file(
-                self._get_hashes_file_path(rom.platform.id)
-            )
-            roms = json.loads(json_file_bytes.decode("utf-8"))
+        roms = await self._get_platform_game_list(rom.platform.id, rom.platform.ra_id)
 
         ra_hash_lower = ra_hash.lower()
         for r in roms:
@@ -215,6 +186,63 @@ class RAHandler(MetadataHandler):
                 return r
 
         return None
+
+    async def _get_platform_game_list(
+        self, platform_id: int, ra_platform_id: int
+    ) -> list[RAGameListItem]:
+        """Return the cached game list for a platform, refetching if the cache
+        is expired, missing, or poisoned (not a list — e.g. a prior RA API
+        error wrote ``{}`` to disk, which would later raise AttributeError on
+        the ``r.get("Hashes", ...)`` lookup).
+        """
+        cache_fresh = (
+            await self._exists_cache_file(platform_id)
+            and await self._days_since_last_cache_file_update(platform_id)
+            < REFRESH_RETROACHIEVEMENTS_CACHE_DAYS
+        )
+
+        if cache_fresh:
+            try:
+                json_file_bytes = await fs_resource_handler.read_file(
+                    self._get_hashes_file_path(platform_id)
+                )
+                cached = json.loads(json_file_bytes.decode("utf-8"))
+            except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+                log.warning(
+                    "RA hashes cache for platform %s is corrupt, refetching: %s",
+                    platform_id,
+                    exc,
+                )
+            else:
+                if isinstance(cached, list):
+                    return cast(list[RAGameListItem], cached)
+                log.warning(
+                    "RA hashes cache for platform %s has wrong shape (%s), refetching",
+                    platform_id,
+                    type(cached).__name__,
+                )
+
+        roms = await self.ra_service.get_game_list(
+            system_id=ra_platform_id,
+            only_games_with_achievements=True,
+            include_hashes=True,
+        )
+
+        # Only persist a response we trust. An empty list (or anything that
+        # fell through get_game_list's type guard) is almost always an API
+        # error, and caching it would block matching for the full refresh
+        # window — which is how RA scanning silently breaks without Hasheous.
+        if roms:
+            platform_resources_path = fs_resource_handler.get_platform_resources_path(
+                platform_id
+            )
+            await fs_resource_handler.write_file(
+                json.dumps(roms, indent=4).encode("utf-8"),
+                platform_resources_path,
+                self.HASHES_FILE_NAME,
+            )
+
+        return roms
 
     def get_platform(self, slug: str) -> RAGamesPlatform:
         if slug not in RA_PLATFORM_LIST:

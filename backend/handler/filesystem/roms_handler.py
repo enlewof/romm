@@ -23,6 +23,7 @@ from exceptions.fs_exceptions import (
     RomsNotFoundException,
 )
 from handler.metadata.base_handler import UniversalPlatformSlug as UPS
+from logger.logger import log
 from models.platform import Platform
 from models.rom import Rom, RomFile, RomFileCategory
 from utils.archive_7zip import process_file_7z
@@ -419,7 +420,7 @@ class FSRomsHandler(FSHandler):
     async def get_rom_files(
         self, rom: Rom, calculate_hashes: bool = True
     ) -> ParsedRomFiles:
-        from adapters.services.rahasher import RAHasherService
+        from adapters.services.rahasher import RAHasherError, RAHasherService
         from handler.metadata import meta_ra_handler
 
         rel_roms_path = self.get_roms_fs_structure(
@@ -447,10 +448,26 @@ class FSRomsHandler(FSHandler):
             if calculate_hashes:
                 ra_platform = meta_ra_handler.get_platform(rom.platform_slug)
                 if ra_platform and ra_platform["ra_id"]:
-                    rom_ra_h = await RAHasherService().calculate_hash(
-                        ra_platform,
-                        f"{abs_fs_path}/{rom.fs_name}/*",
+                    # RAHasher takes a single file, not a glob or directory.
+                    # Previously this passed "<dir>/*" via create_subprocess_exec,
+                    # which doesn't expand globs — the literal "*" reached RAHasher
+                    # and every multi-part ROM silently failed to hash. Pick the
+                    # primary disc/cartridge file from the directory instead.
+                    primary_file = self._find_primary_ra_file(
+                        f"{abs_fs_path}/{rom.fs_name}"
                     )
+                    if primary_file is not None:
+                        try:
+                            rom_ra_h = await RAHasherService().calculate_hash(
+                                ra_platform,
+                                str(primary_file),
+                            )
+                        except RAHasherError as exc:
+                            log.error(
+                                "RAHasher failed for multi-part ROM %s: %s",
+                                rom.fs_name,
+                                exc,
+                            )
 
             for f_path, file_name in iter_files(
                 f"{abs_fs_path}/{rom.fs_name}", recursive=True
@@ -538,10 +555,13 @@ class FSRomsHandler(FSHandler):
             if calculate_hashes:
                 ra_platform = meta_ra_handler.get_platform(rom.platform_slug)
                 if ra_platform and ra_platform["ra_id"]:
-                    rom_ra_h = await RAHasherService().calculate_hash(
-                        ra_platform,
-                        f"{abs_fs_path}/{rom.fs_name}",
-                    )
+                    try:
+                        rom_ra_h = await RAHasherService().calculate_hash(
+                            ra_platform,
+                            f"{abs_fs_path}/{rom.fs_name}",
+                        )
+                    except RAHasherError as exc:
+                        log.error("RAHasher failed for %s: %s", rom.fs_name, exc)
 
             file_hash = FileHash(
                 crc_hash=crc32_to_hex(crc_c) if crc_c != DEFAULT_CRC_C else "",
@@ -592,6 +612,41 @@ class FSRomsHandler(FSHandler):
             ),
             ra_hash=rom_ra_h,
         )
+
+    # File extensions RAHasher understands for a multi-part ROM, in the order
+    # we prefer them (RA matches sets by the "primary" file, not the pieces).
+    _RA_PRIMARY_FILE_EXTS: Final = (
+        ".m3u",  # multi-disc playlist — whole-set match
+        ".cue",  # CD TOC
+        ".gdi",  # Dreamcast
+        ".chd",  # compressed disc image
+        ".iso",  # raw disc image
+        ".nrg",  # Nero disc image
+        ".pbp",  # PSP/PSX EBOOT
+    )
+
+    def _find_primary_ra_file(self, directory: str) -> Path | None:
+        """Pick the single file inside ``directory`` that RAHasher should hash.
+
+        Walks the directory top-level-first, preferring disc-image / playlist
+        extensions in the order RA cares about. Returns ``None`` if nothing
+        suitable is found, in which case the caller should skip hashing rather
+        than pass a directory (RAHasher expects a file) or a glob pattern
+        (``create_subprocess_exec`` doesn't expand globs).
+        """
+        best_match: Path | None = None
+        best_rank = len(self._RA_PRIMARY_FILE_EXTS)
+        for root, file_name in iter_files(directory, recursive=True):
+            ext = Path(file_name).suffix.lower()
+            if ext not in self._RA_PRIMARY_FILE_EXTS:
+                continue
+            rank = self._RA_PRIMARY_FILE_EXTS.index(ext)
+            if rank < best_rank:
+                best_rank = rank
+                best_match = root / file_name
+                if rank == 0:
+                    break
+        return best_match
 
     def _calculate_rom_hashes(
         self,

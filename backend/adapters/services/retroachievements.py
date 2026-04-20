@@ -156,6 +156,12 @@ class RetroAchievementsService:
 
         url = self.url.joinpath("API_GetGameList.php").with_query(**params)
         response = await self._request(str(url))
+        # _request() returns {} on HTTP / auth / JSON-decode errors. Casting that
+        # to list[RAGameListItem] lies to both the type checker and downstream
+        # callers that cache the "list" to disk — poisoning the RA hashes cache
+        # for REFRESH_RETROACHIEVEMENTS_CACHE_DAYS. Refuse to pretend.
+        if not isinstance(response, list):
+            return []
         return cast(list[RAGameListItem], response)
 
     async def get_user_completion_progress(

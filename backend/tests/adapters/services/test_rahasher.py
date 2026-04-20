@@ -69,77 +69,73 @@ class TestRAHasherService:
 
     @pytest.mark.asyncio
     async def test_calculate_hash_rahasher_not_found(self, service: RAHasherService):
-        """Test when RAHasher executable is not found."""
+        """Missing binary raises RAHasherError so scans don't silently skip RA."""
         with patch(
             "asyncio.create_subprocess_exec",
             side_effect=FileNotFoundError("RAHasher not found"),
         ):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
-
-        assert result == ""
+            with pytest.raises(RAHasherError, match="not found in PATH"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
     @pytest.mark.asyncio
     async def test_calculate_hash_rahasher_failure(self, service: RAHasherService):
-        """Test when RAHasher fails with non-1 return code."""
+        """Non-zero exit code raises RAHasherError carrying stderr."""
         mock_proc = AsyncMock()
-        mock_proc.wait.return_value = 2  # Error return code
+        mock_proc.wait.return_value = 2
         mock_proc.stderr.read.return_value = b"Error processing file"
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
+            with pytest.raises(RAHasherError, match="exited 2"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
-        assert result == ""
         mock_proc.wait.assert_called_once()
         mock_proc.stderr.read.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_calculate_hash_no_stdout(self, service: RAHasherService):
-        """Test when RAHasher has no stdout."""
+        """Zero exit with no stdout raises — that's a bug, not a clean miss."""
         mock_proc = AsyncMock()
-        mock_proc.wait.return_value = 1
+        mock_proc.wait.return_value = 0
         mock_proc.stdout = None
         mock_proc.stderr = None
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
-
-        assert result == ""
+            with pytest.raises(RAHasherError, match="no stdout"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
     @pytest.mark.asyncio
     async def test_calculate_hash_empty_output(self, service: RAHasherService):
-        """Test when RAHasher returns empty output."""
+        """Empty stdout raises RAHasherError."""
         mock_proc = AsyncMock()
-        mock_proc.wait.return_value = 1
+        mock_proc.wait.return_value = 0
         mock_proc.stdout.read.return_value = b""
         mock_proc.stderr = None
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
-
-        assert result == ""
+            with pytest.raises(RAHasherError, match="empty hash"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
     @pytest.mark.asyncio
     async def test_calculate_hash_invalid_hash_format(self, service: RAHasherService):
-        """Test when RAHasher returns invalid hash format."""
+        """Malformed hash output raises RAHasherError."""
         mock_proc = AsyncMock()
-        mock_proc.wait.return_value = 1
+        mock_proc.wait.return_value = 0
         mock_proc.stdout.read.return_value = b"invalid-hash-format\n"
         mock_proc.stderr = None
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
-
-        assert result == ""
+            with pytest.raises(RAHasherError, match="invalid hash"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
     @pytest.mark.asyncio
     async def test_calculate_hash_with_extra_output(self, service: RAHasherService):
@@ -162,7 +158,7 @@ class TestRAHasherService:
     async def test_calculate_hash_subprocess_args(self, service: RAHasherService):
         """Test that subprocess is called with correct arguments."""
         mock_proc = AsyncMock()
-        mock_proc.wait.return_value = 1
+        mock_proc.wait.return_value = 0
         mock_proc.stdout.read.return_value = b"a1b2c3d4e5f6789012345678901234ab\n"
         mock_proc.stderr = None
 
@@ -215,32 +211,31 @@ class TestRAHasherService:
 
     @pytest.mark.asyncio
     async def test_calculate_hash_stderr_handling(self, service: RAHasherService):
-        """Test proper handling of stderr when RAHasher fails."""
+        """Stderr from a failing RAHasher invocation is attached to the error."""
         mock_proc = AsyncMock()
         mock_proc.wait.return_value = 2
         mock_proc.stderr.read.return_value = b"File not supported"
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
+            with pytest.raises(RAHasherError, match="File not supported"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
-        assert result == ""
         mock_proc.stderr.read.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_calculate_hash_stderr_none(self, service: RAHasherService):
-        """Test handling when stderr is None."""
+        """Missing stderr stream still raises with a placeholder message."""
         mock_proc = AsyncMock()
         mock_proc.wait.return_value = 2
         mock_proc.stderr = None
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await service.calculate_hash(
-                {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
-            )
-
-        assert result == ""
+            with pytest.raises(RAHasherError, match="<no stderr>"):
+                await service.calculate_hash(
+                    {"ra_id": 7, "slug": "nes"}, "/path/to/game.nes"
+                )
 
 
 class TestRAHasherArchiveSkip:
