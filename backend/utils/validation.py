@@ -19,6 +19,7 @@ class ValidationError(Exception):
 # Pre-compiled regex patterns for better performance
 USERNAME_PATTERN = re.compile(r"^[a-zA-Z0-9_-]+$")
 USERNAME_INVALID_CHARS_PATTERN = re.compile(r"[^a-zA-Z0-9_-]")
+USERNAME_CONSECUTIVE_HYPHENS_PATTERN = re.compile(r"-{2,}")
 EMAIL_PATTERN = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
 
@@ -101,7 +102,7 @@ def sanitize_username(username: str) -> str:
     sanitized = USERNAME_INVALID_CHARS_PATTERN.sub("-", ascii_username)
 
     # Collapse multiple consecutive hyphens into one
-    sanitized = re.sub(r"-{2,}", "-", sanitized)
+    sanitized = USERNAME_CONSECUTIVE_HYPHENS_PATTERN.sub("-", sanitized)
 
     # Strip leading and trailing hyphens
     sanitized = sanitized.strip("-")

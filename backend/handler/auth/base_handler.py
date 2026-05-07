@@ -440,6 +440,8 @@ class OpenIDHandler:
                 "User with email '%s' not found, creating new user",
                 hl(email, color=CYAN),
             )
+            # Lazy import to avoid circular dependency: utils.validation imports
+            # models.user which (via handler.auth.__init__) imports this module.
             from utils.validation import ValidationError, sanitize_username
 
             try:
