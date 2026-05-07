@@ -4,6 +4,7 @@ import pytest
 
 from utils.validation import (
     ValidationError,
+    sanitize_username,
     validate_ascii_only,
     validate_email,
     validate_password,
@@ -92,6 +93,59 @@ class TestValidateUsername:
         with pytest.raises(ValidationError) as exc_info:
             validate_username("résumé")
         assert True
+
+
+class TestSanitizeUsername:
+    """Test username sanitization."""
+
+    def test_valid_username_unchanged(self):
+        """Test that already-valid usernames are returned unchanged."""
+        assert sanitize_username("user123") == "user123"
+        assert sanitize_username("test_user") == "test_user"
+        assert sanitize_username("user-name") == "user-name"
+
+    def test_dot_replaced_with_hyphen(self):
+        """Test that dots are replaced with hyphens."""
+        assert sanitize_username("john.doe") == "john-doe"
+        assert sanitize_username("first.last.name") == "first-last-name"
+
+    def test_special_chars_replaced_with_hyphen(self):
+        """Test that special characters are replaced with hyphens."""
+        assert sanitize_username("user@domain") == "user-domain"
+        assert sanitize_username("user name") == "user-name"
+
+    def test_consecutive_invalid_chars_collapsed(self):
+        """Test that multiple consecutive invalid characters collapse to a single hyphen."""
+        assert sanitize_username("user..name") == "user-name"
+        assert sanitize_username("user@.name") == "user-name"
+
+    def test_leading_trailing_hyphens_stripped(self):
+        """Test that leading and trailing hyphens are stripped after sanitization."""
+        assert sanitize_username(".username") == "username"
+        assert sanitize_username("username.") == "username"
+
+    def test_non_ascii_chars_removed(self):
+        """Test that non-ASCII characters are removed."""
+        assert sanitize_username("naïve") == "nave"
+        assert sanitize_username("jöhn") == "jhn"
+
+    def test_too_short_after_sanitization_raises(self):
+        """Test that a ValidationError is raised if sanitized result is too short."""
+        with pytest.raises(ValidationError) as exc_info:
+            sanitize_username("...")
+        assert "too short" in exc_info.value.message
+
+    def test_empty_username_raises(self):
+        """Test that an empty username raises a ValidationError."""
+        with pytest.raises(ValidationError) as exc_info:
+            sanitize_username("")
+        assert "cannot be empty" in exc_info.value.message
+
+    def test_long_username_truncated(self):
+        """Test that long usernames are truncated to 255 characters."""
+        long_username = "a" * 300
+        result = sanitize_username(long_username)
+        assert len(result) <= 255
 
 
 class TestValidatePassword:
