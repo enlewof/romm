@@ -12,7 +12,7 @@ const usernameLength = (v: string) =>
   (v.length >= 3 && v.length <= 255) || i18n.global.t("common.username-length");
 
 const usernameChars = (v: string) =>
-  /^[a-zA-Z0-9_-]*$/.test(v) || i18n.global.t("common.username-chars");
+  /^[a-zA-Z0-9._-]*$/.test(v) || i18n.global.t("common.username-chars");
 
 const passwordLength = (v: string) =>
   (v.length >= 6 && v.length <= 255) || i18n.global.t("common.password-length");

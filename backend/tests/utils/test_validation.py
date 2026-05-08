@@ -50,6 +50,8 @@ class TestValidateUsername:
         validate_username("test_user")
         validate_username("admin")
         validate_username("user-name")
+        validate_username("john.doe")
+        validate_username("first.last.name")
 
     def test_invalid_empty_username(self):
         """Test that empty usernames fail validation."""
@@ -78,10 +80,10 @@ class TestValidateUsername:
         """Test that usernames with invalid characters fail validation."""
         with pytest.raises(ValidationError) as exc_info:
             validate_username("user@domain")
-        assert "letters, numbers, underscores, and hyphens" in exc_info.value.message
+        assert "letters, numbers, underscores, hyphens, and dots" in exc_info.value.message
 
         with pytest.raises(ValidationError) as exc_info:
-            validate_username("user.name")
+            validate_username("user name")
         assert True
 
     def test_invalid_non_ascii_username(self):
@@ -103,11 +105,12 @@ class TestSanitizeUsername:
         assert sanitize_username("user123") == "user123"
         assert sanitize_username("test_user") == "test_user"
         assert sanitize_username("user-name") == "user-name"
+        assert sanitize_username("john.doe") == "john.doe"
 
-    def test_dot_replaced_with_hyphen(self):
-        """Test that dots are replaced with hyphens."""
-        assert sanitize_username("john.doe") == "john-doe"
-        assert sanitize_username("first.last.name") == "first-last-name"
+    def test_dot_preserved(self):
+        """Test that dots are preserved since they are now allowed."""
+        assert sanitize_username("john.doe") == "john.doe"
+        assert sanitize_username("first.last.name") == "first.last.name"
 
     def test_special_chars_replaced_with_hyphen(self):
         """Test that special characters are replaced with hyphens."""
@@ -116,13 +119,13 @@ class TestSanitizeUsername:
 
     def test_consecutive_invalid_chars_collapsed(self):
         """Test that multiple consecutive invalid characters collapse to a single hyphen."""
-        assert sanitize_username("user..name") == "user-name"
-        assert sanitize_username("user@.name") == "user-name"
+        assert sanitize_username("user@#name") == "user-name"
+        assert sanitize_username("user@ name") == "user-name"
 
     def test_leading_trailing_hyphens_stripped(self):
         """Test that leading and trailing hyphens are stripped after sanitization."""
-        assert sanitize_username(".username") == "username"
-        assert sanitize_username("username.") == "username"
+        assert sanitize_username("@username") == "username"
+        assert sanitize_username("username@") == "username"
 
     def test_non_ascii_chars_removed(self):
         """Test that non-ASCII characters are removed."""
