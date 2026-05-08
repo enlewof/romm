@@ -17,8 +17,8 @@ class ValidationError(Exception):
 
 
 # Pre-compiled regex patterns for better performance
-USERNAME_PATTERN = re.compile(r"^[a-zA-Z0-9._-]+$")
-USERNAME_INVALID_CHARS_PATTERN = re.compile(r"[^a-zA-Z0-9._-]")
+USERNAME_PATTERN = re.compile(r"^[\x21-\x7E]+$")
+USERNAME_INVALID_CHARS_PATTERN = re.compile(r"[^\x21-\x7E]")
 USERNAME_CONSECUTIVE_HYPHENS_PATTERN = re.compile(r"-{2,}")
 EMAIL_PATTERN = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
@@ -70,7 +70,7 @@ def validate_username(username: str) -> None:
         raise ValidationError(msg, "Username")
 
     if not USERNAME_PATTERN.match(username):
-        msg = "Username can only contain letters, numbers, underscores, hyphens, and dots"
+        msg = "Username must not contain spaces or control characters"
         log.error(f"Validation failed: {msg} for username: {username}")
         raise ValidationError(msg, "Username")
 

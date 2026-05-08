@@ -51,7 +51,9 @@ class TestValidateUsername:
         validate_username("admin")
         validate_username("user-name")
         validate_username("john.doe")
-        validate_username("first.last.name")
+        validate_username("user@domain")
+        validate_username("user+tag")
+        validate_username("user/path")
 
     def test_invalid_empty_username(self):
         """Test that empty usernames fail validation."""
@@ -77,13 +79,13 @@ class TestValidateUsername:
         assert "no more than 255 characters" in exc_info.value.message
 
     def test_invalid_characters_username(self):
-        """Test that usernames with invalid characters fail validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            validate_username("user@domain")
-        assert "letters, numbers, underscores, hyphens, and dots" in exc_info.value.message
-
+        """Test that usernames with spaces or control characters fail validation."""
         with pytest.raises(ValidationError) as exc_info:
             validate_username("user name")
+        assert "spaces or control characters" in exc_info.value.message
+
+        with pytest.raises(ValidationError) as exc_info:
+            validate_username("user\tname")
         assert True
 
     def test_invalid_non_ascii_username(self):
@@ -105,26 +107,21 @@ class TestSanitizeUsername:
         assert sanitize_username("user123") == "user123"
         assert sanitize_username("test_user") == "test_user"
         assert sanitize_username("user-name") == "user-name"
-
-    def test_dot_preserved(self):
-        """Test that dots are preserved since they are now allowed."""
         assert sanitize_username("john.doe") == "john.doe"
-        assert sanitize_username("first.last.name") == "first.last.name"
+        assert sanitize_username("user@domain") == "user@domain"
 
-    def test_special_chars_replaced_with_hyphen(self):
-        """Test that special characters are replaced with hyphens."""
-        assert sanitize_username("user@domain") == "user-domain"
+    def test_space_replaced_with_hyphen(self):
+        """Test that spaces are replaced with hyphens."""
         assert sanitize_username("user name") == "user-name"
+        assert sanitize_username("john doe smith") == "john-doe-smith"
 
-    def test_consecutive_invalid_chars_collapsed(self):
-        """Test that multiple consecutive invalid characters collapse to a single hyphen."""
-        assert sanitize_username("user@#name") == "user-name"
-        assert sanitize_username("user@ name") == "user-name"
+    def test_consecutive_spaces_collapsed(self):
+        """Test that multiple consecutive spaces collapse to a single hyphen."""
+        assert sanitize_username("user  name") == "user-name"
 
-    def test_leading_trailing_hyphens_stripped(self):
-        """Test that leading and trailing hyphens are stripped after sanitization."""
-        assert sanitize_username("@username") == "username"
-        assert sanitize_username("username@") == "username"
+    def test_leading_trailing_spaces_stripped(self):
+        """Test that leading and trailing spaces are stripped after sanitization."""
+        assert sanitize_username(" username ") == "username"
 
     def test_non_ascii_chars_removed(self):
         """Test that non-ASCII characters are removed."""
@@ -134,7 +131,7 @@ class TestSanitizeUsername:
     def test_too_short_after_sanitization_raises(self):
         """Test that a ValidationError is raised if sanitized result is too short."""
         with pytest.raises(ValidationError) as exc_info:
-            sanitize_username("...")
+            sanitize_username(" a ")  # strips to "a" after space→hyphen + strip
         assert "too short" in exc_info.value.message
 
     def test_empty_username_raises(self):
