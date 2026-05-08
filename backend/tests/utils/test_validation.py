@@ -105,7 +105,6 @@ class TestSanitizeUsername:
         assert sanitize_username("user123") == "user123"
         assert sanitize_username("test_user") == "test_user"
         assert sanitize_username("user-name") == "user-name"
-        assert sanitize_username("john.doe") == "john.doe"
 
     def test_dot_preserved(self):
         """Test that dots are preserved since they are now allowed."""
