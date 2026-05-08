@@ -86,7 +86,7 @@ class TestValidateUsername:
 
         with pytest.raises(ValidationError) as exc_info:
             validate_username("user\tname")
-        assert True
+        assert "spaces or control characters" in exc_info.value.message
 
     def test_invalid_non_ascii_username(self):
         """Test that usernames with non-ASCII characters fail validation."""
@@ -96,7 +96,7 @@ class TestValidateUsername:
 
         with pytest.raises(ValidationError) as exc_info:
             validate_username("résumé")
-        assert True
+        assert "ASCII characters" in exc_info.value.message
 
 
 class TestSanitizeUsername:
